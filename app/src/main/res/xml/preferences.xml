@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_baseline_wb_sunny_24"
+        android:key="theme_preference"
+        android:title="@string/dark_theme" />
+</androidx.preference.PreferenceScreen>

@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ModuloTech</string>
+
+    <string name="devices_fragment_label">Devices</string>
+    <string name="action_settings">Settings</string>
+    <string name="search">Search</string>
+    <string name="network_error_text">Try to refresh</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="filter">Filter</string>
+
+
+    <!-- TODO: Make singleton class with companion object instead-->
+    <string name="settings_preference" translatable="false">settings_prefs</string>
+</resources>
