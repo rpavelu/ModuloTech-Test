@@ -1,71 +1,59 @@
 package com.ratushny.modulotech.presentation.screen.deviceslist
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ratushny.modulotech.R
-import com.ratushny.modulotech.data.model.Device
+import com.ratushny.modulotech.data.network.model.DeviceResponse
+import com.ratushny.modulotech.data.network.model.ProductTypeResponse
+import com.ratushny.modulotech.databinding.DeviceItemBinding
 
-class DevicesListAdapter :
-    RecyclerView.Adapter<DevicesListAdapter.ViewHolder>() {
+class DevicesListAdapter(
+    private val onClick: (device: DeviceResponse) -> Unit
+) : RecyclerView.Adapter<DevicesListAdapter.ViewHolder>() {
 
-    private var devicesItemData: List<Device> = emptyList()
-//    private var filteredDevicesItemData: List<ModuloDevice> = emptyList()
+    private var devices: List<DeviceResponse> = emptyList()
 
-//    lateinit var clickListener: ClickListener
+    fun updateDevicesList(list: List<DeviceResponse>) {
+        val diffCallback = DevicesListDiffUtilCallback(devices, list)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
 
-//    fun setOnItemClickListener(clickListener: ClickListener) {
-//        this.clickListener = clickListener
-//    }
-
-//    interface ClickListener {
-//        fun onClick(pos: Int, view: View)
-//    }
-
-    fun addItemList(itemList: List<Device>) {
-        devicesItemData = itemList
-//        filteredDevicesItemData = itemList
-
-        notifyDataSetChanged()
+        this.devices = list
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.device_item, parent, false)
-        return ViewHolder(view)
+        val binding = DeviceItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun getItemCount() = devicesItemData.size
+    override fun getItemCount() = devices.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val device: Device = devicesItemData[position]
-        holder.nameTextView.text = device.deviceName
-
-        val deviceType = device.productType
-        holder.deviceImageView.setImageResource(
-            when (deviceType) {
-                "Light" -> R.drawable.ic_baseline_bulb_24
-                "Heater" -> R.drawable.ic_baseline_whatshot_24
-                "RollerShutter" -> R.drawable.ic_baseline_dehaze_24
-                else -> R.drawable.ic_baseline_wb_sunny_24
-            }
-        )
+        holder.bind(devices[position], onClick)
     }
 
     inner class ViewHolder(
-        itemView: View,
-        val nameTextView: TextView = itemView.findViewById(R.id.device_name),
-        val deviceImageView: ImageView = itemView.findViewById(R.id.device_image)
-    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        override fun onClick(v: View) {
-//            clickListener.onClick(bindingAdapterPosition, v)
-        }
+        private val binding: DeviceItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            itemView.setOnClickListener(this)
+        fun bind(
+            device: DeviceResponse,
+            onClick: (device: DeviceResponse) -> Unit
+        ) = with(binding) {
+            deviceName.text = device.deviceName
+
+            val deviceType = device.productType
+            deviceImage.setImageResource(
+                when (deviceType) {
+                    ProductTypeResponse.Light -> R.drawable.ic_baseline_bulb_24
+                    ProductTypeResponse.Heater -> R.drawable.ic_baseline_whatshot_24
+                    ProductTypeResponse.RollerShutter -> R.drawable.ic_baseline_dehaze_24
+                }
+            )
+
+            itemView.setOnClickListener { onClick(device) }
         }
     }
 }

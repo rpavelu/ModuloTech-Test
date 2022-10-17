@@ -10,8 +10,49 @@
         android:name="com.ratushny.modulotech.presentation.screen.deviceslist.DevicesListFragment"
         android:label="@string/devices_fragment_label"
         tools:layout="@layout/device_list_fragment">
+        <action
+            android:id="@+id/action_home_to_light"
+            app:destination="@id/lightFragment" />
+        <action
+            android:id="@+id/action_home_to_heater"
+            app:destination="@id/heaterFragment" />
+        <action
+            android:id="@+id/action_home_to_roller_shutter"
+            app:destination="@id/rollerShutterFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/lightFragment"
+        android:name="com.ratushny.modulotech.presentation.screen.light.LightFragment"
+        android:label="@string/light"
+        tools:layout="@layout/light_fragment">
+
+        <argument
+            android:name="device"
+            app:argType="com.ratushny.modulotech.data.network.model.DeviceResponse" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/heaterFragment"
+        android:name="com.ratushny.modulotech.presentation.screen.heater.HeaterFragment"
+        android:label="@string/heater"
+        tools:layout="@layout/heater_fragment">
+
+        <argument
+            android:name="device"
+            app:argType="com.ratushny.modulotech.data.network.model.DeviceResponse" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/rollerShutterFragment"
+        android:name="com.ratushny.modulotech.presentation.screen.shutter.RollerShutterFragment"
+        android:label="@string/roller_shutter"
+        tools:layout="@layout/roller_shutter_fragment">
+
+        <argument
+            android:name="device"
+            app:argType="com.ratushny.modulotech.data.network.model.DeviceResponse" />
+    </fragment>
 
     <fragment
         android:id="@+id/SettingsFragment"

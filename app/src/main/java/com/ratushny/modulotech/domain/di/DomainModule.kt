@@ -6,7 +6,7 @@ import com.ratushny.modulotech.domain.interactor.ModuloInteractor
 import org.koin.dsl.module
 
 val domainRepositoryModule = module {
-    single<ModuloRepositoryApi> { ModuloRepository(service = get()) }
+    single<ModuloRepositoryApi> { ModuloRepository(service = get(), preferencesEntry = get()) }
 }
 
 val domainInteractorModule = module {

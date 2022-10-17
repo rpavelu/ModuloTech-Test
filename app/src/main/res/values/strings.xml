@@ -8,7 +8,13 @@
     <string name="dark_theme">Dark theme</string>
     <string name="filter">Filter</string>
 
+    <string name="light">Light</string>
+    <string name="heater">Heater</string>
+    <string name="roller_shutter">Roller Shutter</string>
 
-    <!-- TODO: Make singleton class with companion object instead-->
-    <string name="settings_preference" translatable="false">settings_prefs</string>
+    <string name="mode">Mode</string>
+    <string name="position">Position</string>
+    <string name="on_off">ON/OFF</string>
+
+    <string name="zero" translatable="false">0</string>
 </resources>

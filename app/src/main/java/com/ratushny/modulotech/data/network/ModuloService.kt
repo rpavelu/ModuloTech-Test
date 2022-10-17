@@ -1,6 +1,6 @@
 package com.ratushny.modulotech.data.network
 
-import com.ratushny.modulotech.data.model.ServerResponse
+import com.ratushny.modulotech.data.network.model.ServerResponse
 import retrofit2.http.GET
 
 interface ModuloService {
