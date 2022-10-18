@@ -22,5 +22,7 @@ class PreferencesEntry(
         const val IS_LIGHT_FILTER_ENABLED = "is_light_filter_enabled"
         const val IS_HEATER_FILTER_ENABLED = "is_heater_filter_enabled"
         const val IS_ROLLER_SHUTTER_FILTER_ENABLED = "is_roller_shutter_filter_enabled"
+
+        const val IS_DATA_NOT_LOADED = "is_data_not_loaded"
     }
 }

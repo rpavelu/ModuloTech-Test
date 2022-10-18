@@ -4,20 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ratushny.modulotech.data.network.model.DeviceResponse
-import com.ratushny.modulotech.data.network.model.ProductTypeResponse
+import com.ratushny.modulotech.domain.entity.device.Device
+import com.ratushny.modulotech.domain.entity.device.ProductType
+import com.ratushny.modulotech.domain.interactor.DeviceInteractor
 import com.ratushny.modulotech.domain.interactor.ModuloInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class DevicesListViewModel(
-    private val moduloInteractor: ModuloInteractor
+    private val moduloInteractor: ModuloInteractor,
+    private val deviceInteractor: DeviceInteractor,
 ) : ViewModel() {
 
-    private lateinit var originalDeviceList: List<DeviceResponse>
-
-    private val _moduloList = MutableLiveData<List<DeviceResponse>>()
-    val moduloList: LiveData<List<DeviceResponse>>
+    private val _moduloList = MutableLiveData<List<Device>>()
+    val moduloList: LiveData<List<Device>>
         get() = _moduloList
 
     private val _isLightFilterEnabled = MutableLiveData<Boolean>()
@@ -32,29 +33,48 @@ class DevicesListViewModel(
     val isRollerShutterFilterEnabled: LiveData<Boolean>
         get() = _isRollerShutterFilterEnabled
 
-    fun updateFilterByProductType(productType: ProductTypeResponse, enabled: Boolean) =
+    fun updateFilterByProductType(productType: ProductType, enabled: Boolean) =
         when (productType) {
-            ProductTypeResponse.Light -> _isLightFilterEnabled.value =
-                enabled.also { moduloInteractor.setLightFilterEnabled(enabled) }
-            ProductTypeResponse.Heater -> _isHeaterFilterEnabled.value =
-                enabled.also { moduloInteractor.setHeaterFilterEnabled(enabled) }
-            ProductTypeResponse.RollerShutter -> _isRollerShutterFilterEnabled.value =
-                enabled.also { moduloInteractor.setRollerShutterFilterEnabled(enabled) }
+            ProductType.LIGHT -> _isLightFilterEnabled.value =
+                enabled.also { deviceInteractor.setLightFilterEnabled(enabled) }
+            ProductType.HEATER -> _isHeaterFilterEnabled.value =
+                enabled.also { deviceInteractor.setHeaterFilterEnabled(enabled) }
+            ProductType.ROLLERSHUTTER -> _isRollerShutterFilterEnabled.value =
+                enabled.also { deviceInteractor.setRollerShutterFilterEnabled(enabled) }
         }
+
+    fun loadData() {
+        viewModelScope.launch {
+            moduloInteractor.loadData()
+            refreshDeviceList()
+        }
+    }
+
+    fun removeDevice(device: Device) {
+        viewModelScope.launch(Dispatchers.Main) {
+            deviceInteractor.deleteDevice(device)
+            _moduloList.value = _moduloList.value?.filter { it != device }
+        }
+    }
+
+    fun forceRefreshData() {
+        viewModelScope.launch {
+            moduloInteractor.forceRefreshData()
+            refreshDeviceList()
+        }
+    }
 
     fun refreshDeviceList() {
         viewModelScope.launch {
             try {
                 _isLightFilterEnabled.value =
-                    moduloInteractor.isLightFilterEnabled()
+                    deviceInteractor.isLightFilterEnabled()
                 _isHeaterFilterEnabled.value =
-                    moduloInteractor.isHeaterFilterEnabled()
+                    deviceInteractor.isHeaterFilterEnabled()
                 _isRollerShutterFilterEnabled.value =
-                    moduloInteractor.isRollerShutterFilterEnabled()
+                    deviceInteractor.isRollerShutterFilterEnabled()
 
-                _moduloList.value = moduloInteractor.loadDevices().also {
-                    originalDeviceList = it
-                }
+                _moduloList.value = deviceInteractor.loadDevices()
             } catch (error: Throwable) {
                 Timber.e("Error loading device list: $error")
             }

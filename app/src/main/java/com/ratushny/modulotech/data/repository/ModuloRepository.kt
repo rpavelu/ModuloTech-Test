@@ -1,11 +1,10 @@
 package com.ratushny.modulotech.data.repository
 
-import androidx.collection.ArraySet
-import androidx.collection.arraySetOf
+import com.ratushny.modulotech.data.database.dao.DeviceDao
+import com.ratushny.modulotech.data.database.dao.UserDao
+import com.ratushny.modulotech.data.database.mapper.convertToDatabaseEntity
+import com.ratushny.modulotech.data.mapper.convertToAppEntity
 import com.ratushny.modulotech.data.network.ModuloService
-import com.ratushny.modulotech.data.network.model.DeviceResponse
-import com.ratushny.modulotech.data.network.model.ProductTypeResponse
-import com.ratushny.modulotech.data.network.model.UserResponse
 import com.ratushny.modulotech.data.preferences.PreferencesEntry
 import com.ratushny.modulotech.domain.api.ModuloRepositoryApi
 import kotlinx.coroutines.Dispatchers
@@ -13,51 +12,33 @@ import kotlinx.coroutines.withContext
 
 class ModuloRepository(
     private val service: ModuloService,
+    private val deviceDao: DeviceDao,
+    private val userDao: UserDao,
     private val preferencesEntry: PreferencesEntry,
 ) : ModuloRepositoryApi {
 
-    override suspend fun loadDevices(): List<DeviceResponse> =
+    override suspend fun loadData() =
         withContext(Dispatchers.IO) {
-            val filteredProductTypes = createFilteredProductTypesSet()
+            if (preferencesEntry.readBoolean(PreferencesEntry.IS_DATA_NOT_LOADED)) {
+                forceRefreshData()
 
-            service.loadData().devices.filter { filteredProductTypes.contains(it.productType) }
+                preferencesEntry.saveBoolean(PreferencesEntry.IS_DATA_NOT_LOADED, false)
+            }
         }
 
-    override suspend fun loadUser(): UserResponse =
+    override suspend fun forceRefreshData() =
         withContext(Dispatchers.IO) {
-            service.loadData().user
+            val response = service.loadData()
+
+            // Load devices
+            val devices = response.devices.map { it.convertToAppEntity() }
+                .map { it.convertToDatabaseEntity() }
+            deviceDao.deleteAll()
+            deviceDao.insert(devices)
+
+            // Load user
+            val user = response.user.convertToAppEntity().convertToDatabaseEntity()
+            userDao.deleteAll()
+            userDao.insert(user)
         }
-
-    private fun createFilteredProductTypesSet(): Set<ProductTypeResponse> {
-        val filterSet: ArraySet<ProductTypeResponse> = arraySetOf()
-
-        if (isLightFilterEnabled())
-            filterSet.add(ProductTypeResponse.Light)
-
-        if (isHeaterFilterEnabled())
-            filterSet.add(ProductTypeResponse.Heater)
-
-        if (isRollerShutterFilterEnabled())
-            filterSet.add(ProductTypeResponse.RollerShutter)
-
-        return filterSet
-    }
-
-    override fun isLightFilterEnabled(): Boolean =
-        preferencesEntry.readBoolean(PreferencesEntry.IS_LIGHT_FILTER_ENABLED)
-
-    override fun isHeaterFilterEnabled(): Boolean =
-        preferencesEntry.readBoolean(PreferencesEntry.IS_HEATER_FILTER_ENABLED)
-
-    override fun isRollerShutterFilterEnabled(): Boolean =
-        preferencesEntry.readBoolean(PreferencesEntry.IS_ROLLER_SHUTTER_FILTER_ENABLED)
-
-    override fun setLightFilterEnabled(enabled: Boolean) =
-        preferencesEntry.saveBoolean(PreferencesEntry.IS_LIGHT_FILTER_ENABLED, enabled)
-
-    override fun setHeaterFilterEnabled(enabled: Boolean) =
-        preferencesEntry.saveBoolean(PreferencesEntry.IS_HEATER_FILTER_ENABLED, enabled)
-
-    override fun setRollerShutterFilterEnabled(enabled: Boolean) =
-        preferencesEntry.saveBoolean(PreferencesEntry.IS_ROLLER_SHUTTER_FILTER_ENABLED, enabled)
 }

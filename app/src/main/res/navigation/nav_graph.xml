@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/DevicesListFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/DevicesListFragment"
         android:name="com.ratushny.modulotech.presentation.screen.deviceslist.DevicesListFragment"
         android:label="@string/devices_fragment_label"
         tools:layout="@layout/device_list_fragment">
@@ -21,6 +21,13 @@
             app:destination="@id/rollerShutterFragment" />
     </fragment>
 
+    <action
+        android:id="@+id/open_devices_fragment"
+        app:destination="@+id/DevicesListFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/nav_graph"
+        app:popUpToInclusive="true" />
+
     <fragment
         android:id="@+id/lightFragment"
         android:name="com.ratushny.modulotech.presentation.screen.light.LightFragment"
@@ -29,7 +36,7 @@
 
         <argument
             android:name="device"
-            app:argType="com.ratushny.modulotech.data.network.model.DeviceResponse" />
+            app:argType="com.ratushny.modulotech.domain.entity.device.Light" />
     </fragment>
 
     <fragment
@@ -40,7 +47,7 @@
 
         <argument
             android:name="device"
-            app:argType="com.ratushny.modulotech.data.network.model.DeviceResponse" />
+            app:argType="com.ratushny.modulotech.domain.entity.device.Heater" />
     </fragment>
 
     <fragment
@@ -51,16 +58,32 @@
 
         <argument
             android:name="device"
-            app:argType="com.ratushny.modulotech.data.network.model.DeviceResponse" />
+            app:argType="com.ratushny.modulotech.domain.entity.device.RollerShutter" />
     </fragment>
 
     <fragment
         android:id="@+id/SettingsFragment"
         android:name="com.ratushny.modulotech.presentation.screen.settings.SettingsFragment"
-        android:label="@string/action_settings"
+        android:label="@string/settings"
         tools:layout="@layout/settings_fragment" />
 
     <action
         android:id="@+id/open_setting_fragment"
-        app:destination="@+id/SettingsFragment" />
+        app:destination="@+id/SettingsFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/nav_graph"
+        app:popUpToInclusive="true" />
+
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.ratushny.modulotech.presentation.screen.user.UserFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/user_fragment" />
+
+    <action
+        android:id="@+id/open_profile_fragment"
+        app:destination="@+id/ProfileFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/nav_graph"
+        app:popUpToInclusive="true" />
 </navigation>

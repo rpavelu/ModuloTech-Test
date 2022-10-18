@@ -1,11 +1,11 @@
 package com.ratushny.modulotech.presentation.screen.deviceslist
 
 import androidx.recyclerview.widget.DiffUtil
-import com.ratushny.modulotech.data.network.model.DeviceResponse
+import com.ratushny.modulotech.domain.entity.device.Device
 
 open class DevicesListDiffUtilCallback(
-    private val oldDevices: List<DeviceResponse>,
-    private val newDevices: List<DeviceResponse>
+    private val oldDevices: List<Device>,
+    private val newDevices: List<Device>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldDevices.size
 

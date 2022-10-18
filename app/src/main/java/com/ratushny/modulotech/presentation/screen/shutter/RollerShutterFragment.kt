@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.navigation.fragment.navArgs
 import com.ratushny.modulotech.databinding.RollerShutterFragmentBinding
 import org.koin.androidx.scope.ScopeFragment
@@ -18,6 +19,8 @@ class RollerShutterFragment : ScopeFragment() {
 
     private val args by navArgs<RollerShutterFragmentArgs>()
 
+    private val device by lazy { args.device }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,6 +33,28 @@ class RollerShutterFragment : ScopeFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Here goes everything
+
+        if (viewModel.position.value == null) {
+            viewModel.setDeviceValues(device)
+        }
+
+        binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
+                viewModel.setPosition(progress, device)
+            }
+
+            override fun onStartTrackingTouch(seekbar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekbar: SeekBar?) {
+
+            }
+        })
+
+        viewModel.position.observe(viewLifecycleOwner) {
+            binding.seekbarValue.text = it.toString()
+            binding.seekbar.progress = it
+        }
     }
 }

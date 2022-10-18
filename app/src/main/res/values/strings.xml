@@ -2,11 +2,14 @@
     <string name="app_name">ModuloTech</string>
 
     <string name="devices_fragment_label">Devices</string>
-    <string name="action_settings">Settings</string>
+    <string name="settings">Settings</string>
+    <string name="profile">Profile</string>
     <string name="search">Search</string>
     <string name="network_error_text">Try to refresh</string>
     <string name="dark_theme">Dark theme</string>
     <string name="filter">Filter</string>
+    <string name="refresh">Refresh</string>
+    <string name="confirmation">Confirmation</string>
 
     <string name="light">Light</string>
     <string name="heater">Heater</string>
@@ -17,4 +20,18 @@
     <string name="on_off">ON/OFF</string>
 
     <string name="zero" translatable="false">0</string>
+
+    <string name="intensity">Intensity</string>
+    <string name="temperature">Temperature</string>
+
+    <string name="user">User</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="postal_code">Postal code</string>
+    <string name="street">Street</string>
+    <string name="street_code">Street code</string>
+    <string name="country">Country</string>
 </resources>

@@ -20,6 +20,8 @@ class LightFragment : ScopeFragment() {
 
     private val args by navArgs<LightFragmentArgs>()
 
+    private val device by lazy { args.device }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,16 +36,16 @@ class LightFragment : ScopeFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (viewModel.mode.value == null && viewModel.intensity.value == null) {
-            viewModel.setDeviceValues(args.device)
+            viewModel.setDeviceValues(device)
         }
 
         binding.modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setMode(isChecked)
+            viewModel.setMode(isChecked, device)
         }
 
         binding.seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
-                viewModel.setIntensity(progress)
+                viewModel.setIntensity(progress, device)
             }
 
             override fun onStartTrackingTouch(seekbar: SeekBar?) {

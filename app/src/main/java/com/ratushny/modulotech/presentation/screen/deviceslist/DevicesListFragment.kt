@@ -1,6 +1,5 @@
 package com.ratushny.modulotech.presentation.screen.deviceslist
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.MenuHost
@@ -8,9 +7,15 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ratushny.modulotech.R
-import com.ratushny.modulotech.data.network.model.ProductTypeResponse
 import com.ratushny.modulotech.databinding.DeviceListFragmentBinding
+import com.ratushny.modulotech.domain.entity.device.Heater
+import com.ratushny.modulotech.domain.entity.device.Light
+import com.ratushny.modulotech.domain.entity.device.ProductType
+import com.ratushny.modulotech.domain.entity.device.RollerShutter
 import org.koin.androidx.scope.ScopeFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,19 +29,26 @@ class DevicesListFragment : ScopeFragment() {
 
     private val viewModel: DevicesListViewModel by viewModel()
 
+    // TODO: Remove duplication with activity
     private val navigation by lazy { activity?.findNavController(R.id.nav_host_fragment_content_main) }
 
     private val adapter: DevicesListAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        DevicesListAdapter {
-            when (it.productType) {
-                ProductTypeResponse.Light -> {
-                    navigation?.navigate(DevicesListFragmentDirections.actionHomeToLight(it))
+        DevicesListAdapter { device ->
+            when (device) {
+                is Light -> {
+                    navigation?.navigate(
+                        DevicesListFragmentDirections.actionHomeToLight(device)
+                    )
                 }
-                ProductTypeResponse.Heater -> {
-                    navigation?.navigate(DevicesListFragmentDirections.actionHomeToHeater(it))
+                is Heater -> {
+                    navigation?.navigate(
+                        DevicesListFragmentDirections.actionHomeToHeater(device)
+                    )
                 }
-                ProductTypeResponse.RollerShutter -> {
-                    navigation?.navigate(DevicesListFragmentDirections.actionHomeToRollerShutter(it))
+                is RollerShutter -> {
+                    navigation?.navigate(
+                        DevicesListFragmentDirections.actionHomeToRollerShutter(device)
+                    )
                 }
             }
         }
@@ -54,7 +66,10 @@ class DevicesListFragment : ScopeFragment() {
                 menuInflater.inflate(R.menu.filter_menu, menu)
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                showFiltersAlertDialog()
+                when (menuItem.itemId) {
+                    R.id.action_filter -> showFiltersAlertDialog()
+                    R.id.action_refresh -> viewModel.forceRefreshData()
+                }
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -63,8 +78,8 @@ class DevicesListFragment : ScopeFragment() {
     }
 
     private fun showFiltersAlertDialog() {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(getString(R.string.filter))
+        val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
+        alertDialogBuilder.setTitle(getString(R.string.filter))
 
         val productTypes = arrayOf(
             getString(R.string.light),
@@ -72,25 +87,26 @@ class DevicesListFragment : ScopeFragment() {
             getString(R.string.roller_shutter)
         )
 
+        // TODO: Rewrite to objects
         val checkedItems = booleanArrayOf(
             viewModel.isLightFilterEnabled.value == true,
             viewModel.isHeaterFilterEnabled.value == true,
             viewModel.isRollerShutterFilterEnabled.value == true
         )
 
-        builder.setMultiChoiceItems(
+        alertDialogBuilder.setMultiChoiceItems(
             productTypes, checkedItems
         ) { _, position, checked ->
             when (position) {
-                0 -> viewModel.updateFilterByProductType(ProductTypeResponse.Light, checked)
-                1 -> viewModel.updateFilterByProductType(ProductTypeResponse.Heater, checked)
-                2 -> viewModel.updateFilterByProductType(ProductTypeResponse.RollerShutter, checked)
+                0 -> viewModel.updateFilterByProductType(ProductType.LIGHT, checked)
+                1 -> viewModel.updateFilterByProductType(ProductType.HEATER, checked)
+                2 -> viewModel.updateFilterByProductType(ProductType.ROLLERSHUTTER, checked)
             }
 
             viewModel.refreshDeviceList()
         }
 
-        builder.show()
+        alertDialogBuilder.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -98,9 +114,22 @@ class DevicesListFragment : ScopeFragment() {
 
         binding.deviceListRecyclerview.adapter = adapter
 
-        if (viewModel.moduloList.value.isNullOrEmpty()) {
-            viewModel.refreshDeviceList()
+        val swipeHandler = object : DevicesListSwipeToDelete(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.absoluteAdapterPosition
+
+                viewModel.removeDevice(adapter.getDeviceByPosition(position))
+            }
         }
+
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(binding.deviceListRecyclerview)
+
+        if (viewModel.moduloList.value.isNullOrEmpty()) {
+            viewModel.loadData()
+        }
+
+        viewModel.refreshDeviceList()
 
         viewModel.moduloList.observe(viewLifecycleOwner) {
             binding.loadingProgress.visibility = View.GONE

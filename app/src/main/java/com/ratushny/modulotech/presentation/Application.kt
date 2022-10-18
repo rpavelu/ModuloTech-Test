@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.ratushny.modulotech.BuildConfig
+import com.ratushny.modulotech.data.di.databaseModule
 import com.ratushny.modulotech.data.di.preferencesModule
 import com.ratushny.modulotech.data.network.networkModule
 import com.ratushny.modulotech.domain.di.domainInteractorModule
@@ -20,6 +21,10 @@ import timber.log.Timber
 class Application : Application() {
 
     private val sharedPreferences by lazy { getSharedPreferences(packageName, MODE_PRIVATE) }
+
+    private val appModule = module {
+        single { this }
+    }
 
     private val sharedPreferencesModule = module {
         single<SharedPreferences> { sharedPreferences }
@@ -39,6 +44,7 @@ class Application : Application() {
             androidContext(this@Application)
             androidLogger(if (BuildConfig.DEBUG) Level.DEBUG else Level.INFO)
             modules(
+                appModule,
                 sharedPreferencesModule,
                 deviceListFragmentModule,
                 domainInteractorModule,
@@ -46,9 +52,11 @@ class Application : Application() {
                 networkModule,
                 preferencesModule,
                 settingsFragmentModule,
+                userFragmentModule,
                 lightFragmentModule,
                 heaterFragmentModule,
                 rollerShutterFragmentModule,
+                databaseModule,
             )
         }
     }

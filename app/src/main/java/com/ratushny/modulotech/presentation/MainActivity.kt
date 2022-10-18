@@ -1,8 +1,6 @@
 package com.ratushny.modulotech.presentation
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -29,21 +27,37 @@ class MainActivity : ScopeActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration =
+            AppBarConfiguration(
+                setOf(
+                    R.id.DevicesListFragment,
+                    R.id.ProfileFragment,
+                    R.id.SettingsFragment,
+                )
+            )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
+        binding.bottomNavigation.setOnItemSelectedListener {
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_settings -> {
-            navController.navigate(R.id.open_setting_fragment)
-            true
+            when (it.itemId) {
+                R.id.devices_page -> {
+                    if (it.itemId != binding.bottomNavigation.selectedItemId)
+                        navController.navigate(R.id.open_devices_fragment)
+                    true
+                }
+                R.id.profile_page -> {
+                    if (it.itemId != binding.bottomNavigation.selectedItemId)
+                        navController.navigate(R.id.open_profile_fragment)
+                    true
+                }
+                R.id.settings_page -> {
+                    navController.navigate(R.id.open_setting_fragment)
+                    true
+                }
+                else -> false
+            }
         }
-        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp(appBarConfiguration)

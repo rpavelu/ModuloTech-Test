@@ -9,13 +9,23 @@ import com.ratushny.modulotech.presentation.screen.light.LightViewModel
 import com.ratushny.modulotech.presentation.screen.settings.SettingsFragment
 import com.ratushny.modulotech.presentation.screen.shutter.RollerShutterFragment
 import com.ratushny.modulotech.presentation.screen.shutter.RollerShutterViewModel
+import com.ratushny.modulotech.presentation.screen.user.UserFragment
+import com.ratushny.modulotech.presentation.screen.user.UserViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val deviceListFragmentModule = module {
     scope<DevicesListFragment> {
         viewModel {
-            DevicesListViewModel(moduloInteractor = get())
+            DevicesListViewModel(moduloInteractor = get(), deviceInteractor = get())
+        }
+    }
+}
+
+val userFragmentModule = module {
+    scope<UserFragment> {
+        viewModel {
+            UserViewModel(userInteractor = get())
         }
     }
 }
@@ -27,7 +37,7 @@ val settingsFragmentModule = module {
 val lightFragmentModule = module {
     scope<LightFragment> {
         viewModel {
-            LightViewModel()
+            LightViewModel(deviceInteractor = get())
         }
     }
 }
@@ -35,7 +45,7 @@ val lightFragmentModule = module {
 val heaterFragmentModule = module {
     scope<HeaterFragment> {
         viewModel {
-            HeaterViewModel()
+            HeaterViewModel(deviceInteractor = get())
         }
     }
 }
@@ -43,7 +53,7 @@ val heaterFragmentModule = module {
 val rollerShutterFragmentModule = module {
     scope<RollerShutterFragment> {
         viewModel {
-            RollerShutterViewModel()
+            RollerShutterViewModel(deviceInteractor = get())
         }
     }
 }
