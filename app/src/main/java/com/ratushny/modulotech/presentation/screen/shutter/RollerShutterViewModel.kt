@@ -2,15 +2,15 @@ package com.ratushny.modulotech.presentation.screen.shutter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ratushny.modulotech.domain.entity.device.RollerShutter
 import com.ratushny.modulotech.domain.interactor.DeviceInteractor
+import com.ratushny.modulotech.domain.model.device.RollerShutter
+import com.ratushny.modulotech.presentation.screen.BaseViewModel
 import kotlinx.coroutines.launch
 
 class RollerShutterViewModel(
     private val deviceInteractor: DeviceInteractor
-) : ViewModel() {
+) : BaseViewModel<RollerShutterScreenState>() {
 
     private val _position = MutableLiveData<Int>()
     val position: LiveData<Int>
@@ -36,5 +36,13 @@ class RollerShutterViewModel(
                 )
             )
         }
+    }
+
+    override fun createInitialState(): RollerShutterScreenState {
+        return RollerShutterScreenState()
+    }
+
+    override fun onAttached() {
+        //TODO
     }
 }

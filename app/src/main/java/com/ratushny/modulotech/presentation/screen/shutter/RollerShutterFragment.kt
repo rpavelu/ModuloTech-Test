@@ -1,42 +1,33 @@
 package com.ratushny.modulotech.presentation.screen.shutter
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.ratushny.modulotech.databinding.RollerShutterFragmentBinding
-import org.koin.androidx.scope.ScopeFragment
+import com.ratushny.modulotech.databinding.FragmentRollerShutterBinding
+import com.ratushny.modulotech.presentation.screen.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RollerShutterFragment : ScopeFragment() {
+class RollerShutterFragment :
+    BaseFragment<RollerShutterScreenState, FragmentRollerShutterBinding, RollerShutterViewModel>() {
 
-    private var _binding: RollerShutterFragmentBinding? = null
-    private val binding get() = _binding!!
 
-    private val viewModel: RollerShutterViewModel by viewModel()
+    override val viewModel: RollerShutterViewModel by viewModel()
 
     private val args by navArgs<RollerShutterFragmentArgs>()
 
     private val device by lazy { args.device }
 
-    override fun onCreateView(
+    override fun inflateView(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = RollerShutterFragmentBinding.inflate(inflater, container, false)
-
-        return binding.root
+        container: ViewGroup?
+    ): FragmentRollerShutterBinding {
+        return FragmentRollerShutterBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (viewModel.position.value == null) {
-            viewModel.setDeviceValues(device)
-        }
+    override fun initViews() {
+        viewModel.setDeviceValues(device)
 
         binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -56,5 +47,10 @@ class RollerShutterFragment : ScopeFragment() {
             binding.seekbarValue.text = it.toString()
             binding.seekbar.progress = it
         }
+    }
+
+    override fun screenStateObserver(): Observer<RollerShutterScreenState> {
+        //TODO
+        return Observer { }
     }
 }

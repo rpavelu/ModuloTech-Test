@@ -1,6 +1,6 @@
 package com.ratushny.modulotech.domain.api
 
-import com.ratushny.modulotech.domain.entity.device.Device
+import com.ratushny.modulotech.domain.model.device.Device
 
 interface DeviceRepositoryApi {
 
@@ -10,15 +10,4 @@ interface DeviceRepositoryApi {
 
     suspend fun deleteDevice(device: Device)
 
-    fun isLightFilterEnabled(): Boolean
-
-    fun isHeaterFilterEnabled(): Boolean
-
-    fun isRollerShutterFilterEnabled(): Boolean
-
-    fun setLightFilterEnabled(enabled: Boolean)
-
-    fun setHeaterFilterEnabled(enabled: Boolean)
-
-    fun setRollerShutterFilterEnabled(enabled: Boolean)
 }

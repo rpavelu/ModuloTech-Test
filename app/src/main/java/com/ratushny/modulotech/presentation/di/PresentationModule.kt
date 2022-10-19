@@ -6,7 +6,6 @@ import com.ratushny.modulotech.presentation.screen.heater.HeaterFragment
 import com.ratushny.modulotech.presentation.screen.heater.HeaterViewModel
 import com.ratushny.modulotech.presentation.screen.light.LightFragment
 import com.ratushny.modulotech.presentation.screen.light.LightViewModel
-import com.ratushny.modulotech.presentation.screen.settings.SettingsFragment
 import com.ratushny.modulotech.presentation.screen.shutter.RollerShutterFragment
 import com.ratushny.modulotech.presentation.screen.shutter.RollerShutterViewModel
 import com.ratushny.modulotech.presentation.screen.user.UserFragment
@@ -28,10 +27,6 @@ val userFragmentModule = module {
             UserViewModel(userInteractor = get())
         }
     }
-}
-
-val settingsFragmentModule = module {
-    single { SettingsFragment() }
 }
 
 val lightFragmentModule = module {

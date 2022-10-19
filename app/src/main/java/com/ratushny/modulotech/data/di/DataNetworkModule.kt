@@ -1,5 +1,6 @@
-package com.ratushny.modulotech.data.network
+package com.ratushny.modulotech.data.di
 
+import com.ratushny.modulotech.data.network.ModuloService
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit

@@ -5,9 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ratushny.modulotech.R
-import com.ratushny.modulotech.databinding.DeviceItemBinding
-import com.ratushny.modulotech.domain.entity.device.Device
-import com.ratushny.modulotech.domain.entity.device.ProductType
+import com.ratushny.modulotech.databinding.ItemDeviceBinding
+import com.ratushny.modulotech.domain.model.device.Device
+import com.ratushny.modulotech.domain.model.device.Heater
+import com.ratushny.modulotech.domain.model.device.Light
+import com.ratushny.modulotech.domain.model.device.RollerShutter
 
 class DevicesListAdapter(
     private val onClick: (device: Device) -> Unit
@@ -26,7 +28,7 @@ class DevicesListAdapter(
     fun getDeviceByPosition(position: Int): Device = devices[position]
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = DeviceItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemDeviceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -37,7 +39,7 @@ class DevicesListAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: DeviceItemBinding
+        private val binding: ItemDeviceBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -46,14 +48,19 @@ class DevicesListAdapter(
         ) = with(binding) {
             deviceName.text = device.deviceName
 
-            val deviceType = device.productType
             deviceImage.setImageResource(
-                when (deviceType) {
-                    ProductType.LIGHT -> R.drawable.ic_baseline_bulb_24
-                    ProductType.HEATER -> R.drawable.ic_baseline_whatshot_24
-                    ProductType.ROLLERSHUTTER -> R.drawable.ic_baseline_dehaze_24
+                when (device) {
+                    is Light -> R.drawable.ic_bulb
+                    is Heater -> R.drawable.ic_heater
+                    is RollerShutter -> R.drawable.ic_roller_shutter
                 }
             )
+
+            deviceValue.text = when (device) {
+                is Light -> device.intensity.toString()
+                is Heater -> device.temperature.toString()
+                is RollerShutter -> device.position.toString()
+            }
 
             itemView.setOnClickListener { onClick(device) }
         }

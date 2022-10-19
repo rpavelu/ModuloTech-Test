@@ -1,19 +1,27 @@
 package com.ratushny.modulotech.data.database.mapper
 
+import com.ratushny.modulotech.data.database.entity.AddressEntity
 import com.ratushny.modulotech.data.database.entity.UserEntity
-import com.ratushny.modulotech.domain.entity.user.User
-import java.util.*
+import com.ratushny.modulotech.domain.model.user.User
 
 fun UserEntity.convertToAppEntity(): User = User(
-    firstName = firstName ?: "",
-    lastName = lastName ?: "",
-    address = address?.convertToAppEntity(),
-    birthDate = birthdate ?: Date(),
+    id = id,
+    firstName = firstName,
+    lastName = lastName,
+    address = address.convertToAppEntity(),
+    birthDate = birthdate,
 )
 
 fun User.convertToDatabaseEntity(): UserEntity = UserEntity(
+    id = id,
     firstName = firstName,
     lastName = lastName,
-    address = address?.convertToDatabaseEntity(),
+    address = address?.convertToDatabaseEntity() ?: AddressEntity(
+        city = "",
+        postalCode = 0,
+        street = "",
+        streetCode = "",
+        country = ""
+    ),
     birthdate = birthDate,
 )

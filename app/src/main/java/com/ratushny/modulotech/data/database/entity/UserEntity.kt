@@ -4,35 +4,27 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ratushny.modulotech.data.database.DatabaseContract.User.COLUMN_DATE
+import com.ratushny.modulotech.data.database.DatabaseContract.User.COLUMN_FIRST_NAME
+import com.ratushny.modulotech.data.database.DatabaseContract.User.COLUMN_ID
+import com.ratushny.modulotech.data.database.DatabaseContract.User.COLUMN_LAST_NAME
+import com.ratushny.modulotech.data.database.DatabaseContract.User.TABLE_NAME
 import java.util.*
 
-@Entity(tableName = UserEntity.TABLE_NAME)
+@Entity(tableName = TABLE_NAME)
 data class UserEntity(
-    @ColumnInfo(name = COLUMN_FIRST_NAME)
-    val firstName: String?,
-
-    @ColumnInfo(name = COLUMN_LAST_NAME)
-    val lastName: String?,
-
-    @Embedded val address: AddressEntity?,
-
-    @ColumnInfo(name = COLUMN_DATE)
-    val birthdate: Date?,
-) {
-
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
-    var id: Long = 0
+    var id: Long = 0,
 
-    companion object {
-        const val TABLE_NAME = "user"
+    @ColumnInfo(name = COLUMN_FIRST_NAME)
+    val firstName: String,
 
-        const val SELECT_ALL = "select * from $TABLE_NAME"
-        const val DELETE_ALL = "delete from $TABLE_NAME"
+    @ColumnInfo(name = COLUMN_LAST_NAME)
+    val lastName: String,
 
-        private const val COLUMN_ID = "id"
-        private const val COLUMN_FIRST_NAME = "first_name"
-        private const val COLUMN_LAST_NAME = "last_name"
-        private const val COLUMN_DATE = "date"
-    }
-}
+    @Embedded val address: AddressEntity,
+
+    @ColumnInfo(name = COLUMN_DATE)
+    val birthdate: Date,
+)

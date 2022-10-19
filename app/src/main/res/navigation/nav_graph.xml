@@ -9,7 +9,7 @@
         android:id="@+id/DevicesListFragment"
         android:name="com.ratushny.modulotech.presentation.screen.deviceslist.DevicesListFragment"
         android:label="@string/devices_fragment_label"
-        tools:layout="@layout/device_list_fragment">
+        tools:layout="@layout/fragment_device_list">
         <action
             android:id="@+id/action_home_to_light"
             app:destination="@id/lightFragment" />
@@ -32,53 +32,40 @@
         android:id="@+id/lightFragment"
         android:name="com.ratushny.modulotech.presentation.screen.light.LightFragment"
         android:label="@string/light"
-        tools:layout="@layout/light_fragment">
+        tools:layout="@layout/fragment_light">
 
         <argument
             android:name="device"
-            app:argType="com.ratushny.modulotech.domain.entity.device.Light" />
+            app:argType="com.ratushny.modulotech.domain.model.device.Light" />
     </fragment>
 
     <fragment
         android:id="@+id/heaterFragment"
         android:name="com.ratushny.modulotech.presentation.screen.heater.HeaterFragment"
         android:label="@string/heater"
-        tools:layout="@layout/heater_fragment">
+        tools:layout="@layout/fragment_heater">
 
         <argument
             android:name="device"
-            app:argType="com.ratushny.modulotech.domain.entity.device.Heater" />
+            app:argType="com.ratushny.modulotech.domain.model.device.Heater" />
     </fragment>
 
     <fragment
         android:id="@+id/rollerShutterFragment"
         android:name="com.ratushny.modulotech.presentation.screen.shutter.RollerShutterFragment"
         android:label="@string/roller_shutter"
-        tools:layout="@layout/roller_shutter_fragment">
+        tools:layout="@layout/fragment_roller_shutter">
 
         <argument
             android:name="device"
-            app:argType="com.ratushny.modulotech.domain.entity.device.RollerShutter" />
+            app:argType="com.ratushny.modulotech.domain.model.device.RollerShutter" />
     </fragment>
-
-    <fragment
-        android:id="@+id/SettingsFragment"
-        android:name="com.ratushny.modulotech.presentation.screen.settings.SettingsFragment"
-        android:label="@string/settings"
-        tools:layout="@layout/settings_fragment" />
-
-    <action
-        android:id="@+id/open_setting_fragment"
-        app:destination="@+id/SettingsFragment"
-        app:launchSingleTop="true"
-        app:popUpTo="@+id/nav_graph"
-        app:popUpToInclusive="true" />
 
     <fragment
         android:id="@+id/ProfileFragment"
         android:name="com.ratushny.modulotech.presentation.screen.user.UserFragment"
         android:label="@string/profile"
-        tools:layout="@layout/user_fragment" />
+        tools:layout="@layout/fragment_user" />
 
     <action
         android:id="@+id/open_profile_fragment"

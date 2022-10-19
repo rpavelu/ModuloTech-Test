@@ -2,16 +2,17 @@ package com.ratushny.modulotech.presentation.screen.heater
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ratushny.modulotech.domain.entity.device.DeviceMode
-import com.ratushny.modulotech.domain.entity.device.Heater
 import com.ratushny.modulotech.domain.interactor.DeviceInteractor
+import com.ratushny.modulotech.domain.model.device.DeviceMode
+import com.ratushny.modulotech.domain.model.device.Heater
+import com.ratushny.modulotech.presentation.screen.BaseViewModel
 import kotlinx.coroutines.launch
 
 class HeaterViewModel(
     private val deviceInteractor: DeviceInteractor
-) : ViewModel() {
+) : BaseViewModel<HeaterScreenState>() {
+
     private val _mode = MutableLiveData<Boolean>()
     val mode: LiveData<Boolean>
         get() = _mode
@@ -50,5 +51,13 @@ class HeaterViewModel(
                 )
             )
         }
+    }
+
+    override fun createInitialState(): HeaterScreenState {
+        return HeaterScreenState()
+    }
+
+    override fun onAttached() {
+        //TODO
     }
 }

@@ -1,6 +1,6 @@
 package com.ratushny.modulotech.domain.api
 
 interface ModuloRepositoryApi {
-    suspend fun loadData()
-    suspend fun forceRefreshData()
+
+    suspend fun refreshData(force: Boolean)
 }

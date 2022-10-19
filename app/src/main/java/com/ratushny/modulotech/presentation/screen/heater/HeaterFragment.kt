@@ -1,42 +1,31 @@
 package com.ratushny.modulotech.presentation.screen.heater
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.ratushny.modulotech.databinding.HeaterFragmentBinding
-import org.koin.androidx.scope.ScopeFragment
+import com.ratushny.modulotech.databinding.FragmentHeaterBinding
+import com.ratushny.modulotech.presentation.screen.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HeaterFragment : ScopeFragment() {
+class HeaterFragment : BaseFragment<HeaterScreenState, FragmentHeaterBinding, HeaterViewModel>() {
 
-    private var _binding: HeaterFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    private val viewModel: HeaterViewModel by viewModel()
+    override val viewModel: HeaterViewModel by viewModel()
 
     private val args by navArgs<HeaterFragmentArgs>()
 
     private val device by lazy { args.device }
 
-    override fun onCreateView(
+    override fun inflateView(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = HeaterFragmentBinding.inflate(inflater, container, false)
-
-        return binding.root
+        container: ViewGroup?
+    ): FragmentHeaterBinding {
+        return FragmentHeaterBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (viewModel.mode.value == null && viewModel.temperature.value == null) {
-            viewModel.setDeviceValues(device)
-        }
+    override fun initViews() {
+        viewModel.setDeviceValues(device)
 
         binding.modeSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setMode(isChecked, device)
@@ -64,6 +53,11 @@ class HeaterFragment : ScopeFragment() {
             binding.seekbarValue.text = "$it$CELSIUS_SYMBOL"
             binding.seekbar.progress = ((it - MINIMAL_TEMPERATURE) * 2).toInt()
         }
+    }
+
+    override fun screenStateObserver(): Observer<HeaterScreenState> {
+        //TODO
+        return Observer<HeaterScreenState> { }
     }
 
     companion object {

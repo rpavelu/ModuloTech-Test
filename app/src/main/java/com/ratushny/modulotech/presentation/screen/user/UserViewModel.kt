@@ -2,18 +2,22 @@ package com.ratushny.modulotech.presentation.screen.user
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ratushny.modulotech.domain.entity.user.Address
-import com.ratushny.modulotech.domain.entity.user.User
 import com.ratushny.modulotech.domain.interactor.UserInteractor
+import com.ratushny.modulotech.domain.model.user.Address
+import com.ratushny.modulotech.domain.model.user.User
+import com.ratushny.modulotech.presentation.screen.BaseViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
+import java.text.DateFormat
+import java.util.Date
 
 class UserViewModel(
     private val userInteractor: UserInteractor
-) : ViewModel() {
+) : BaseViewModel<UserScreenState>() {
+
+    private var userId: Long = -1
+
     private val _firstName = MutableLiveData<String>()
     val firstName: LiveData<String>
         get() = _firstName
@@ -54,7 +58,8 @@ class UserViewModel(
         _lastName.value = text
     }
 
-    fun updateBirthdate(date: Date) {
+    fun updateBirthdate(text: String) {
+        val date = DateFormat.getDateInstance(DateFormat.SHORT).parse(text)
         _birthdate.value = date
     }
 
@@ -62,8 +67,8 @@ class UserViewModel(
         _city.value = text
     }
 
-    fun updatePostalCode(code: Int) {
-        _postalCode.value = code
+    fun updatePostalCode(text: String) {
+        _postalCode.value = text.toInt()
     }
 
     fun updateStreet(text: String) {
@@ -82,6 +87,8 @@ class UserViewModel(
         viewModelScope.launch {
             try {
                 val userData = userInteractor.loadUser()
+
+                userId = userData.id
 
                 _firstName.value = userData.firstName
                 _lastName.value = userData.lastName
@@ -102,9 +109,9 @@ class UserViewModel(
 
     fun updateUserData() {
         viewModelScope.launch {
-            Timber.d("here is start updating user")
             userInteractor.updateUser(
                 User(
+                    id = userId,
                     firstName = _firstName.value ?: "",
                     lastName = _lastName.value ?: "",
                     address = Address(
@@ -118,5 +125,13 @@ class UserViewModel(
                 )
             )
         }
+    }
+
+    override fun createInitialState(): UserScreenState {
+        return UserScreenState()
+    }
+
+    override fun onAttached() {
+        //TODO
     }
 }

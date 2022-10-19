@@ -1,6 +1,6 @@
 package com.ratushny.modulotech.domain.api
 
-import com.ratushny.modulotech.domain.entity.user.User
+import com.ratushny.modulotech.domain.model.user.User
 
 interface UserRepositoryApi {
 

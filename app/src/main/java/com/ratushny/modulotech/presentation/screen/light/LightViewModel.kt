@@ -2,16 +2,16 @@ package com.ratushny.modulotech.presentation.screen.light
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ratushny.modulotech.domain.entity.device.DeviceMode
-import com.ratushny.modulotech.domain.entity.device.Light
 import com.ratushny.modulotech.domain.interactor.DeviceInteractor
+import com.ratushny.modulotech.domain.model.device.DeviceMode
+import com.ratushny.modulotech.domain.model.device.Light
+import com.ratushny.modulotech.presentation.screen.BaseViewModel
 import kotlinx.coroutines.launch
 
 class LightViewModel(
     private val deviceInteractor: DeviceInteractor
-) : ViewModel() {
+) : BaseViewModel<LightScreenState>() {
     private val _mode = MutableLiveData<Boolean>()
     val mode: LiveData<Boolean>
         get() = _mode
@@ -50,5 +50,13 @@ class LightViewModel(
                 )
             )
         }
+    }
+
+    override fun createInitialState(): LightScreenState {
+        return LightScreenState()
+    }
+
+    override fun onAttached() {
+        //TODO
     }
 }

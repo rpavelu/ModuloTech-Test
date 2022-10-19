@@ -1,43 +1,32 @@
 package com.ratushny.modulotech.presentation.screen.light
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.ratushny.modulotech.databinding.LightFragmentBinding
-import org.koin.androidx.scope.ScopeFragment
+import com.ratushny.modulotech.databinding.FragmentLightBinding
+import com.ratushny.modulotech.presentation.screen.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LightFragment : ScopeFragment() {
+class LightFragment : BaseFragment<LightScreenState, FragmentLightBinding, LightViewModel>() {
 
-    private var _binding: LightFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    private val viewModel: LightViewModel by viewModel()
+    override val viewModel: LightViewModel by viewModel()
 
     private val args by navArgs<LightFragmentArgs>()
 
     private val device by lazy { args.device }
 
-    override fun onCreateView(
+    override fun inflateView(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = LightFragmentBinding.inflate(inflater, container, false)
-
-        return binding.root
+        container: ViewGroup?
+    ): FragmentLightBinding {
+        return FragmentLightBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (viewModel.mode.value == null && viewModel.intensity.value == null) {
-            viewModel.setDeviceValues(device)
-        }
+    override fun initViews() {
+        viewModel.setDeviceValues(device)
 
         binding.modeSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setMode(isChecked, device)
@@ -65,5 +54,10 @@ class LightFragment : ScopeFragment() {
             binding.seekbarValue.text = it.toString()
             binding.seekbar.progress = it
         }
+    }
+
+    override fun screenStateObserver(): Observer<LightScreenState> {
+        //TODO
+        return Observer { }
     }
 }

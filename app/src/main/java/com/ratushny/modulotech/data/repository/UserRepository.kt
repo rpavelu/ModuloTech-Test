@@ -4,7 +4,7 @@ import com.ratushny.modulotech.data.database.dao.UserDao
 import com.ratushny.modulotech.data.database.mapper.convertToAppEntity
 import com.ratushny.modulotech.data.database.mapper.convertToDatabaseEntity
 import com.ratushny.modulotech.domain.api.UserRepositoryApi
-import com.ratushny.modulotech.domain.entity.user.User
+import com.ratushny.modulotech.domain.model.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -13,7 +13,7 @@ class UserRepository(
 ) : UserRepositoryApi {
 
     override suspend fun loadUser(): User = withContext(Dispatchers.IO) {
-        userDao.selectAll().map { it.convertToAppEntity() }.first()
+        userDao.selectUser().convertToAppEntity()
     }
 
     override suspend fun updateUser(user: User) = withContext(Dispatchers.IO) {

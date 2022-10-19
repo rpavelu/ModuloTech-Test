@@ -1,122 +1,76 @@
 package com.ratushny.modulotech.presentation.screen.user
 
-import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import com.ratushny.modulotech.R
-import com.ratushny.modulotech.databinding.UserFragmentBinding
+import com.ratushny.modulotech.databinding.FragmentUserBinding
 import com.ratushny.modulotech.presentation.extensions.hideKeyboard
-import org.koin.androidx.scope.ScopeFragment
+import com.ratushny.modulotech.presentation.screen.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.DateFormat
 
-class UserFragment : ScopeFragment() {
+class UserFragment : BaseFragment<UserScreenState, FragmentUserBinding, UserViewModel>() {
 
-    private var _binding: UserFragmentBinding? = null
-    private val binding get() = _binding!!
 
-    private val viewModel: UserViewModel by viewModel()
+    override val viewModel: UserViewModel by viewModel()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = UserFragmentBinding.inflate(inflater, container, false)
+    override fun inflateView(inflater: LayoutInflater, container: ViewGroup?): FragmentUserBinding {
+        return FragmentUserBinding.inflate(inflater, container, false)
+    }
 
+    override fun initViews() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) =
-                menuInflater.inflate(R.menu.user_menu, menu)
+                menuInflater.inflate(R.menu.menu_user_profile, menu)
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
                     R.id.action_confirm -> {
+                        updateData()
                         viewModel.updateUserData()
                         hideKeyboard()
+
+                        Toast.makeText(
+                            context,
+                            getString(R.string.data_updated),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         observeData()
-        observeEditTextListeners()
-
-        if (viewModel.firstName.value.isNullOrEmpty() && viewModel.lastName.value.isNullOrEmpty()) viewModel.refreshUserData()
-
-        super.onViewCreated(view, savedInstanceState)
+        viewModel.refreshUserData()
     }
 
-    private fun observeEditTextListeners() {
-        binding.apply {
-            firstNameText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-                    if (viewModel.firstName.value != text) viewModel.updateFirstName(text)
-                }
-            })
-
-            lastNameText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-                    if (viewModel.lastName.value != text) viewModel.updateLastName(text)
-                }
-            })
-
-            birthdateText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-
-                    val date = DateFormat.getDateInstance(DateFormat.SHORT).parse(text)
-                    if (viewModel.birthdate.value != date) date?.let { viewModel.updateBirthdate(it) }
-                }
-            })
-
-            cityText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-                    if (viewModel.city.value != text) viewModel.updateCity(text)
-                }
-            })
-
-            postalCodeText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-
-                    val code = text.toInt()
-                    if (viewModel.postalCode.value != code) viewModel.updatePostalCode(code)
-                }
-            })
-
-            streetText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-                    if (viewModel.street.value != text) viewModel.updateStreet(text)
-                }
-            })
-
-            streetCodeText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-                    if (viewModel.streetCode.value != text) viewModel.updateStreetCode(text)
-                }
-            })
-
-            countryText.addTextChangedListener(object : UserTextWatcher() {
-                override fun onTextChanged(text: String) {
-                    super.onTextChanged(text)
-                    if (viewModel.country.value != text) viewModel.updateCountry(text)
-                }
-            })
+    private fun updateData() {
+        with(viewModel) {
+            with(binding) {
+                updateFirstName(firstNameText.text.toString())
+                updateLastName(lastNameText.text.toString())
+                updateBirthdate(birthdateText.text.toString())
+                updateCity(cityText.text.toString())
+                updatePostalCode(postalCodeText.text.toString())
+                updateStreet(streetText.text.toString())
+                updateStreetCode(streetCodeText.text.toString())
+                updateCountry(countryText.text.toString())
+            }
         }
     }
 
     private fun observeData() {
-        viewModel.apply {
+        with(viewModel) {
             firstName.observe(viewLifecycleOwner) {
                 binding.firstNameText.setText(it)
             }
@@ -152,4 +106,11 @@ class UserFragment : ScopeFragment() {
             }
         }
     }
+
+    override fun screenStateObserver(): Observer<UserScreenState> {
+        //TODO
+        return Observer { }
+    }
+
+
 }

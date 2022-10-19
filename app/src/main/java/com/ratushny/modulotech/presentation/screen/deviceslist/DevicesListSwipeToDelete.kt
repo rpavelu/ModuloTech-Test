@@ -14,7 +14,7 @@ import com.ratushny.modulotech.R
 abstract class DevicesListSwipeToDelete(context: Context) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
     private val deleteIcon =
-        ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_sweep_24)
+        ContextCompat.getDrawable(context, R.drawable.ic_swipe_to_delete)
 
     // TODO: Remove this !!
     private val intrinsicWidth = deleteIcon?.intrinsicWidth!!

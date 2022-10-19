@@ -5,7 +5,6 @@ import com.ratushny.modulotech.domain.api.ModuloRepositoryApi
 class ModuloInteractor(
     private val repository: ModuloRepositoryApi
 ) {
-    suspend fun loadData() = repository.loadData()
+    suspend fun loadData(force: Boolean) = repository.refreshData(force)
 
-    suspend fun forceRefreshData() = repository.forceRefreshData()
 }

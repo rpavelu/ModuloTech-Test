@@ -1,9 +1,12 @@
 package com.ratushny.modulotech.presentation
 
 import android.os.Bundle
+import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -16,12 +19,15 @@ class MainActivity : ScopeActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    private val navController: NavController by lazy { findNavController(R.id.nav_host_fragment_content_main) }
+    private val navController: NavController by lazy {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
+        navHostFragment.navController
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -32,7 +38,6 @@ class MainActivity : ScopeActivity() {
                 setOf(
                     R.id.DevicesListFragment,
                     R.id.ProfileFragment,
-                    R.id.SettingsFragment,
                 )
             )
 
@@ -51,14 +56,33 @@ class MainActivity : ScopeActivity() {
                         navController.navigate(R.id.open_profile_fragment)
                     true
                 }
-                R.id.settings_page -> {
-                    navController.navigate(R.id.open_setting_fragment)
-                    true
-                }
                 else -> false
             }
         }
     }
+
+    override fun setContentView(view: View) {
+        super.setContentView(view)
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.toolbar.apply {
+                setPadding(paddingLeft, insets.top, paddingRight, paddingBottom)
+            }
+            binding.bottomNavigation.apply {
+                setPadding(paddingLeft, paddingTop, paddingRight, insets.bottom)
+            }
+            binding.navHostFragmentContentMain.apply {
+                setPadding(
+                    paddingLeft,
+                    paddingTop,
+                    paddingRight,
+                    binding.bottomNavigation.measuredHeight
+                )
+            }
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp(appBarConfiguration)
             || super.onSupportNavigateUp()
