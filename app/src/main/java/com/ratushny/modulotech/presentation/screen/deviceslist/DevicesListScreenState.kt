@@ -5,15 +5,21 @@ import com.ratushny.modulotech.domain.model.device.ProductType
 
 data class DevicesListScreenState(
     val filteredDevices: List<Device>,
-    val isLoading: Boolean,
-    val filters: List<Filter>
+    val state: State,
+    val filters: List<Filter>,
 ) {
 
     data class Filter(
         val productType: ProductType,
         val stringRes: Int,
-        val state: Boolean
+        val state: Boolean,
     )
+
+    enum class State {
+        LOADING,
+        SUCCESS,
+        ERROR,
+    }
 }
 
 

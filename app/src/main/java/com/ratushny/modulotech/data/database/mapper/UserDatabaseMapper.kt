@@ -1,6 +1,5 @@
 package com.ratushny.modulotech.data.database.mapper
 
-import com.ratushny.modulotech.data.database.entity.AddressEntity
 import com.ratushny.modulotech.data.database.entity.UserEntity
 import com.ratushny.modulotech.domain.model.user.User
 
@@ -16,12 +15,6 @@ fun User.convertToDatabaseEntity(): UserEntity = UserEntity(
     id = id,
     firstName = firstName,
     lastName = lastName,
-    address = address?.convertToDatabaseEntity() ?: AddressEntity(
-        city = "",
-        postalCode = 0,
-        street = "",
-        streetCode = "",
-        country = ""
-    ),
+    address = address.convertToDatabaseEntity(),
     birthdate = birthDate,
 )

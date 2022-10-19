@@ -3,7 +3,7 @@ package com.ratushny.modulotech.data.network.mapper
 import com.ratushny.modulotech.data.network.model.UserResponse
 import com.ratushny.modulotech.domain.model.user.Address
 import com.ratushny.modulotech.domain.model.user.User
-import java.util.*
+import java.util.Date
 
 fun UserResponse.convertToAppEntity(): User =
     User(
@@ -13,7 +13,7 @@ fun UserResponse.convertToAppEntity(): User =
         birthDate = Date(birthDate ?: 0),
         address = Address(
             address?.city ?: "",
-            address?.postalCode ?: 0,
+            address?.postalCode ?: "",
             address?.street ?: "",
             address?.streetCode ?: "",
             address?.country ?: "",

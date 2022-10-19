@@ -4,7 +4,8 @@
     <string name="devices_fragment_label">Devices</string>
     <string name="profile">Profile</string>
     <string name="search">Search</string>
-    <string name="network_error_text">Try to refresh</string>
+    <string name="devices_list_error">Try to refresh</string>
+    <string name="devices_list_empty">Devices list is empty</string>
     <string name="dark_theme">Dark theme</string>
     <string name="filter">Filter</string>
     <string name="refresh">Refresh</string>
@@ -34,4 +35,9 @@
     <string name="street_code">Street code</string>
     <string name="country">Country</string>
     <string name="data_updated">Data updated!</string>
+
+    <string name="user_error_empty">Field must not be empty</string>
+    <string name="user_error_min_length">Field length must be more than %1$d</string>
+    <string name="user_error_date_format">Date must be in format %1$s</string>
+
 </resources>

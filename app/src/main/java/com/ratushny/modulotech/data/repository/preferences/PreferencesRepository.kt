@@ -15,8 +15,7 @@ class PreferencesRepository(
         )
     }
 
-    // TODO: Change default value to false
-    fun readBoolean(key: String, default: Boolean = true) =
+    fun readBoolean(key: String, default: Boolean = false) =
         sharedPreferences.getBoolean(key, default)
 
     fun saveBoolean(key: String, value: Boolean) =
@@ -30,6 +29,6 @@ class PreferencesRepository(
     }
 
     companion object {
-        const val IS_DATA_NOT_LOADED = "is_data_not_loaded"
+        const val IS_DATA_LOADED = "is_data_loaded"
     }
 }

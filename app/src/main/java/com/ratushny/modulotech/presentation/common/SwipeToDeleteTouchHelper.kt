@@ -1,4 +1,4 @@
-package com.ratushny.modulotech.presentation.screen.deviceslist
+package com.ratushny.modulotech.presentation.common
 
 import android.content.Context
 import android.graphics.Canvas
@@ -11,12 +11,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ratushny.modulotech.R
 
-abstract class DevicesListSwipeToDelete(context: Context) :
+abstract class SwipeToDeleteTouchHelper(context: Context) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
     private val deleteIcon =
         ContextCompat.getDrawable(context, R.drawable.ic_swipe_to_delete)
 
-    // TODO: Remove this !!
     private val intrinsicWidth = deleteIcon?.intrinsicWidth!!
     private val intrinsicHeight = deleteIcon?.intrinsicHeight!!
 

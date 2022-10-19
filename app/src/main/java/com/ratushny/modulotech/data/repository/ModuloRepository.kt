@@ -16,7 +16,7 @@ class ModuloRepository(
 ) : ModuloRepositoryApi {
 
     override suspend fun refreshData(force: Boolean) {
-        if (force || preferencesRepository.readBoolean(PreferencesRepository.IS_DATA_NOT_LOADED)) {
+        if (force || !preferencesRepository.readBoolean(PreferencesRepository.IS_DATA_LOADED)) {
 
             val response = service.loadData()
 
@@ -29,7 +29,7 @@ class ModuloRepository(
             userDao.deleteAll()
             userDao.insert(user)
 
-            preferencesRepository.saveBoolean(PreferencesRepository.IS_DATA_NOT_LOADED, false)
+            preferencesRepository.saveBoolean(PreferencesRepository.IS_DATA_LOADED, true)
         }
     }
 }

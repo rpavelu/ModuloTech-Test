@@ -1,26 +1,26 @@
 package com.ratushny.modulotech.domain.model.device
 
 sealed class Device(
-    val id: Long,
-    val deviceName: String,
+    open val id: Long,
+    open val deviceName: String,
 ) : java.io.Serializable
 
-class Light(
-    id: Long,
-    deviceName: String,
+data class Light(
+    override val id: Long,
+    override val deviceName: String,
     val mode: DeviceMode,
     val intensity: Int,
 ) : Device(id, deviceName)
 
-class Heater(
-    id: Long,
-    deviceName: String,
+data class Heater(
+    override val id: Long,
+    override val deviceName: String,
     val mode: DeviceMode,
     val temperature: Float,
 ) : Device(id, deviceName)
 
-class RollerShutter(
-    id: Long,
-    deviceName: String,
+data class RollerShutter(
+    override val id: Long,
+    override val deviceName: String,
     val position: Int,
 ) : Device(id, deviceName)

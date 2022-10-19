@@ -6,6 +6,6 @@ data class User(
     val id: Long = -1,
     val firstName: String,
     val lastName: String,
-    val address: Address?,
+    val address: Address,
     val birthDate: Date,
 )

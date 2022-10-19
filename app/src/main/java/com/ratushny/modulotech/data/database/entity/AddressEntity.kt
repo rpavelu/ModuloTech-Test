@@ -17,7 +17,7 @@ data class AddressEntity(
     val city: String,
 
     @ColumnInfo(name = COLUMN_POSTAL_CODE)
-    val postalCode: Int,
+    val postalCode: String,
 
     @ColumnInfo(name = COLUMN_STREET)
     val street: String,

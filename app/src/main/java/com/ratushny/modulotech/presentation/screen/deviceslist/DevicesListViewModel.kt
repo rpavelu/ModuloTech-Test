@@ -5,11 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ratushny.modulotech.R
 import com.ratushny.modulotech.domain.interactor.DeviceInteractor
 import com.ratushny.modulotech.domain.interactor.ModuloInteractor
-import com.ratushny.modulotech.domain.model.device.Device
-import com.ratushny.modulotech.domain.model.device.Heater
-import com.ratushny.modulotech.domain.model.device.Light
-import com.ratushny.modulotech.domain.model.device.ProductType
-import com.ratushny.modulotech.domain.model.device.RollerShutter
+import com.ratushny.modulotech.domain.model.device.*
 import com.ratushny.modulotech.presentation.common.SingleLiveData
 import com.ratushny.modulotech.presentation.extensions.update
 import com.ratushny.modulotech.presentation.screen.BaseViewModel
@@ -30,21 +26,27 @@ class DevicesListViewModel(
     val filterDialogState: LiveData<List<DevicesListScreenState.Filter>>
         get() = _filtersDialogState
 
-    override fun createInitialState(): DevicesListScreenState {
-        return DevicesListScreenState(
-            filteredDevices = emptyList(),
-            isLoading = true,
-            filters = listOf(
-                DevicesListScreenState.Filter(ProductType.HEATER, R.string.heater, true),
-                DevicesListScreenState.Filter(ProductType.LIGHT, R.string.light, true),
-                DevicesListScreenState.Filter(
-                    ProductType.ROLLERSHUTTER,
-                    R.string.roller_shutter,
-                    true
-                ),
-            )
+    override fun createInitialState(): DevicesListScreenState = DevicesListScreenState(
+        filteredDevices = emptyList(),
+        state = DevicesListScreenState.State.LOADING,
+        filters = listOf(
+            DevicesListScreenState.Filter(
+                ProductType.HEATER,
+                R.string.heater,
+                true
+            ),
+            DevicesListScreenState.Filter(
+                ProductType.LIGHT,
+                R.string.light,
+                true
+            ),
+            DevicesListScreenState.Filter(
+                ProductType.ROLLERSHUTTER,
+                R.string.roller_shutter,
+                true
+            ),
         )
-    }
+    )
 
     override fun onAttached() {
         viewModelScope.launch {
@@ -59,7 +61,7 @@ class DevicesListViewModel(
                 filteredDevices = devices.filter { device ->
                     device.passedFilter()
                 },
-                isLoading = false
+                state = DevicesListScreenState.State.SUCCESS
             )
         }
     }
@@ -93,25 +95,18 @@ class DevicesListViewModel(
     }
 
     fun refreshData() {
-        screenStateMutable.update { it.copy(isLoading = true) }
+        screenStateMutable.update { it.copy(state = DevicesListScreenState.State.LOADING) }
         viewModelScope.launch {
             moduloInteractor.loadData(force = true)
             devices = deviceInteractor.loadDevices()
         }
     }
 
-    private fun Device.passedFilter(): Boolean {
-        return screenState.value?.filters?.firstOrNull { filter ->
-            when (this) {
-                is Heater -> filter.productType == ProductType.HEATER
-                is Light -> filter.productType == ProductType.LIGHT
-                is RollerShutter -> filter.productType == ProductType.ROLLERSHUTTER
-            }
-        }?.state ?: false
-    }
-
-    private fun List<DevicesListScreenState.Filter>.getForProductType(productType: ProductType): DevicesListScreenState.Filter? {
-        return firstOrNull { it.productType == productType }
-    }
-
+    private fun Device.passedFilter(): Boolean = screenState.value?.filters?.firstOrNull { filter ->
+        when (this) {
+            is Heater -> filter.productType == ProductType.HEATER
+            is Light -> filter.productType == ProductType.LIGHT
+            is RollerShutter -> filter.productType == ProductType.ROLLERSHUTTER
+        }
+    }?.state ?: false
 }
