@@ -9,7 +9,7 @@ import com.ratushny.modulotech.data.database.DatabaseContract.User.COLUMN_FIRST_
 import com.ratushny.modulotech.data.database.DatabaseContract.User.COLUMN_ID
 import com.ratushny.modulotech.data.database.DatabaseContract.User.COLUMN_LAST_NAME
 import com.ratushny.modulotech.data.database.DatabaseContract.User.TABLE_NAME
-import java.util.*
+import java.util.Date
 
 @Entity(tableName = TABLE_NAME)
 data class UserEntity(

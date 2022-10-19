@@ -7,7 +7,11 @@ import com.ratushny.modulotech.data.di.networkModule
 import com.ratushny.modulotech.data.di.preferencesModule
 import com.ratushny.modulotech.data.di.repositoryModule
 import com.ratushny.modulotech.domain.di.interactorModule
-import com.ratushny.modulotech.presentation.di.*
+import com.ratushny.modulotech.presentation.di.deviceListFragmentModule
+import com.ratushny.modulotech.presentation.di.heaterFragmentModule
+import com.ratushny.modulotech.presentation.di.lightFragmentModule
+import com.ratushny.modulotech.presentation.di.rollerShutterFragmentModule
+import com.ratushny.modulotech.presentation.di.userFragmentModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

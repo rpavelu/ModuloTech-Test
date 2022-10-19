@@ -4,7 +4,6 @@
     <string name="devices_fragment_label">Devices</string>
     <string name="profile">Profile</string>
     <string name="filter">Filter</string>
-    <string name="refresh">Refresh</string>
 
     <string name="light">Light</string>
     <string name="heater">Heater</string>

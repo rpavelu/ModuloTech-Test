@@ -3,6 +3,8 @@ package com.ratushny.modulotech.data.repository.preferences
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 class PreferencesRepository(
     private val context: Context
@@ -15,20 +17,31 @@ class PreferencesRepository(
         )
     }
 
-    fun readBoolean(key: String, default: Boolean = false) =
-        sharedPreferences.getBoolean(key, default)
+    var isDataLoaded by booleanPreference(IS_DATA_LOADED, false)
 
-    fun saveBoolean(key: String, value: Boolean) =
-        save { it.putBoolean(key, value) }
 
-    private fun save(action: (SharedPreferences.Editor) -> Unit) {
-        sharedPreferences.edit().also {
-            action.invoke(it)
-            it.apply()
+    private fun booleanPreference(
+        key: String,
+        default: Boolean
+    ): ReadWriteProperty<PreferencesRepository, Boolean> {
+        return object : ReadWriteProperty<PreferencesRepository, Boolean> {
+
+            override fun getValue(thisRef: PreferencesRepository, property: KProperty<*>): Boolean {
+                return thisRef.sharedPreferences.getBoolean(key, default)
+            }
+
+            override fun setValue(
+                thisRef: PreferencesRepository,
+                property: KProperty<*>,
+                value: Boolean
+            ) {
+                thisRef.sharedPreferences.edit().putBoolean(key, value).apply()
+            }
+
         }
     }
 
     companion object {
-        const val IS_DATA_LOADED = "is_data_loaded"
+        private const val IS_DATA_LOADED = "is_data_loaded"
     }
 }

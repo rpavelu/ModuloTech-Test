@@ -1,7 +1,7 @@
 package com.ratushny.modulotech.data.database.converter
 
 import androidx.room.TypeConverter
-import java.util.*
+import java.util.Date
 
 object DateConverter {
 

@@ -3,7 +3,11 @@ package com.ratushny.modulotech.data.network.mapper
 import com.ratushny.modulotech.data.network.model.DeviceModeResponse
 import com.ratushny.modulotech.data.network.model.DeviceResponse
 import com.ratushny.modulotech.data.network.model.ProductTypeResponse
-import com.ratushny.modulotech.domain.model.device.*
+import com.ratushny.modulotech.domain.model.device.Device
+import com.ratushny.modulotech.domain.model.device.DeviceMode
+import com.ratushny.modulotech.domain.model.device.Heater
+import com.ratushny.modulotech.domain.model.device.Light
+import com.ratushny.modulotech.domain.model.device.RollerShutter
 
 fun DeviceResponse.convertToAppEntity(): Device = when (productType) {
     ProductTypeResponse.Light -> Light(

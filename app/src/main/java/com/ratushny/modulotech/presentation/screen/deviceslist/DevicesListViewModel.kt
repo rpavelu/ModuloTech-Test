@@ -5,7 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.ratushny.modulotech.R
 import com.ratushny.modulotech.domain.interactor.DeviceInteractor
 import com.ratushny.modulotech.domain.interactor.ModuloInteractor
-import com.ratushny.modulotech.domain.model.device.*
+import com.ratushny.modulotech.domain.model.device.Device
+import com.ratushny.modulotech.domain.model.device.Heater
+import com.ratushny.modulotech.domain.model.device.Light
+import com.ratushny.modulotech.domain.model.device.ProductType
+import com.ratushny.modulotech.domain.model.device.RollerShutter
 import com.ratushny.modulotech.presentation.common.SingleLiveData
 import com.ratushny.modulotech.presentation.extensions.update
 import com.ratushny.modulotech.presentation.screen.BaseViewModel
