@@ -1,18 +1,20 @@
 package com.ratushny.modulotech.presentation.screen.deviceslist
 
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ratushny.modulotech.R
 import com.ratushny.modulotech.databinding.FragmentDeviceListBinding
 import com.ratushny.modulotech.domain.model.device.Heater
 import com.ratushny.modulotech.domain.model.device.Light
 import com.ratushny.modulotech.domain.model.device.RollerShutter
-import com.ratushny.modulotech.presentation.common.SwipeToDeleteTouchHelper
 import com.ratushny.modulotech.presentation.extensions.attachSwipeToDelete
 import com.ratushny.modulotech.presentation.extensions.changeVisibility
 import com.ratushny.modulotech.presentation.screen.BaseFragment
@@ -24,7 +26,7 @@ class DevicesListFragment :
 
     override val viewModel: DevicesListViewModel by viewModel()
 
-    private val adapter: DevicesListAdapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val deviceAdapter: DevicesListAdapter by lazy(LazyThreadSafetyMode.NONE) {
         DevicesListAdapter { device ->
             when (device) {
                 is Light -> {
@@ -55,18 +57,12 @@ class DevicesListFragment :
 
     override fun initViews() {
         initToolbarMenu()
-
-        binding.deviceListRecyclerview.adapter = adapter
-
-        val swipeHandler = object : SwipeToDeleteTouchHelper(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.absoluteAdapterPosition
-
-                viewModel.removeDevice(adapter.getDeviceByPosition(position))
+        binding.deviceListRecyclerview.apply {
+            adapter = deviceAdapter
+            attachSwipeToDelete(deviceAdapter::getDeviceByPosition) {
+                viewModel.removeDevice(it)
             }
         }
-
-        binding.deviceListRecyclerview.attachSwipeToDelete(swipeHandler)
         viewModel.filterDialogState.observe(viewLifecycleOwner) {
             showFiltersAlertDialog(it)
         }
@@ -112,7 +108,7 @@ class DevicesListFragment :
                 state.state == DevicesListScreenState.State.SUCCESS
                         && state.filteredDevices.isNotEmpty()
             )
-            adapter.updateDevicesList(state.filteredDevices)
+            deviceAdapter.updateDevicesList(state.filteredDevices)
         }
     }
 }

@@ -151,5 +151,4 @@ class UserViewModel(
         private const val POSTAL_CODE_MIN_LENGTH = 5
         private const val DATE_FORMAT = "dd/MM/yyyy"
     }
-
 }

@@ -1,25 +1,22 @@
 package com.ratushny.modulotech.presentation.screen.user
 
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.ratushny.modulotech.R
 import com.ratushny.modulotech.databinding.FragmentUserBinding
 import com.ratushny.modulotech.presentation.extensions.doOnTextChanged
+import com.ratushny.modulotech.presentation.extensions.hideKeyboard
 import com.ratushny.modulotech.presentation.extensions.updateTextIfNeeded
 import com.ratushny.modulotech.presentation.screen.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class UserFragment : BaseFragment<UserScreenState, FragmentUserBinding, UserViewModel>() {
 
+class UserFragment : BaseFragment<UserScreenState, FragmentUserBinding, UserViewModel>() {
 
     override val viewModel: UserViewModel by viewModel()
 
@@ -37,6 +34,7 @@ class UserFragment : BaseFragment<UserScreenState, FragmentUserBinding, UserView
                 when (menuItem.itemId) {
                     R.id.action_confirm -> {
                         viewModel.handleSaveClicked()
+                        hideKeyboard()
                     }
                 }
                 return true
@@ -75,33 +73,31 @@ class UserFragment : BaseFragment<UserScreenState, FragmentUserBinding, UserView
                 countryText.updateTextIfNeeded(it.country.value)
 
                 // Show errors
-                firstNameText.setError(it.firstName.error)
-                lastNameText.setError(it.lastName.error)
-                birthdateText.setError(it.birthDate.error)
-                cityText.setError(it.city.error)
-                postalCodeText.setError(it.postalCode.error)
-                streetText.setError(it.street.error)
-                streetCodeText.setError(it.streetCode.error)
-                countryText.setError(it.country.error)
+                firstNameLayout.setError(it.firstName.error)
+                lastNameLayout.setError(it.lastName.error)
+                birthdateLayout.setError(it.birthDate.error)
+                cityLayout.setError(it.city.error)
+                postalCodeLayout.setError(it.postalCode.error)
+                streetLayout.setError(it.street.error)
+                streetCodeLayout.setError(it.streetCode.error)
+                countryLayout.setError(it.country.error)
             }
         }
     }
 
-    private fun TextInputEditText.setError(error: UserScreenState.FieldError?) {
-        when (error) {
-            is UserScreenState.DateFormatError -> setError(
-                getString(
-                    R.string.user_error_date_format,
-                    error.dateFormat
-                )
-            )
-            UserScreenState.EmptyFieldError -> setError(getString(R.string.user_error_empty))
-            is UserScreenState.MinLengthError -> setError(
-                getString(R.string.user_error_min_length, error.minLength),
-            )
-            null -> setError(null)
+    private fun TextInputLayout.setError(error: UserScreenState.FieldError?) = when (error) {
+        is UserScreenState.DateFormatError -> setError(
+            getString(R.string.user_error_date_format, error.dateFormat)
+        )
+        UserScreenState.EmptyFieldError -> setError(
+            getString(R.string.user_error_empty)
+        )
+        is UserScreenState.MinLengthError -> setError(
+            getString(R.string.user_error_min_length, error.minLength),
+        )
+        null -> {
+            setError(null)
+            isErrorEnabled = false
         }
     }
-
-
 }

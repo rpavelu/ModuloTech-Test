@@ -2,11 +2,11 @@ package com.ratushny.modulotech.presentation.screen.light
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.ratushny.modulotech.databinding.FragmentLightBinding
+import com.ratushny.modulotech.domain.model.device.DeviceMode
+import com.ratushny.modulotech.presentation.extensions.doOnProgressChanged
 import com.ratushny.modulotech.presentation.screen.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,38 +26,20 @@ class LightFragment : BaseFragment<LightScreenState, FragmentLightBinding, Light
     }
 
     override fun initViews() {
-        viewModel.setDeviceValues(device)
-
+        viewModel.setDevice(device)
         binding.modeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.setMode(isChecked, device)
+            viewModel.setMode(isChecked)
         }
-
-        binding.seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
-                viewModel.setIntensity(progress, device)
-            }
-
-            override fun onStartTrackingTouch(seekbar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekbar: SeekBar?) {
-
-            }
-        })
-
-        viewModel.mode.observe(viewLifecycleOwner) {
-            binding.modeSwitch.isChecked = it
-        }
-
-        viewModel.intensity.observe(viewLifecycleOwner) {
-            binding.seekbarValue.text = it.toString()
-            binding.seekbar.progress = it
+        binding.seekbar.doOnProgressChanged {
+            viewModel.setIntensity(it)
         }
     }
 
-    override fun screenStateObserver(): Observer<LightScreenState> {
-        //TODO
-        return Observer { }
+    override fun screenStateObserver(): Observer<LightScreenState> = Observer {
+        with(binding) {
+            modeSwitch.isChecked = it.light.mode == DeviceMode.ON
+            seekbar.progress = it.light.intensity
+            seekbarValue.text = it.light.intensity.toString()
+        }
     }
 }

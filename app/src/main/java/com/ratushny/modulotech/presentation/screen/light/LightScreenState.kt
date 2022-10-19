@@ -1,5 +1,7 @@
 package com.ratushny.modulotech.presentation.screen.light
 
+import com.ratushny.modulotech.domain.model.device.Light
+
 data class LightScreenState(
-    val ignore: Boolean = true
+    val light: Light
 )

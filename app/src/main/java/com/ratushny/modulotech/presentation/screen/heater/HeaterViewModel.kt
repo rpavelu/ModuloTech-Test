@@ -1,11 +1,10 @@
 package com.ratushny.modulotech.presentation.screen.heater
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ratushny.modulotech.domain.interactor.DeviceInteractor
 import com.ratushny.modulotech.domain.model.device.DeviceMode
 import com.ratushny.modulotech.domain.model.device.Heater
+import com.ratushny.modulotech.presentation.extensions.update
 import com.ratushny.modulotech.presentation.screen.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -13,51 +12,69 @@ class HeaterViewModel(
     private val deviceInteractor: DeviceInteractor
 ) : BaseViewModel<HeaterScreenState>() {
 
-    private val _mode = MutableLiveData<Boolean>()
-    val mode: LiveData<Boolean>
-        get() = _mode
-
-    private val _temperature = MutableLiveData<Float>()
-    val temperature: LiveData<Float>
-        get() = _temperature
-
-    fun setMode(isEnabled: Boolean, device: Heater) {
-        _mode.value = isEnabled
-
-        updateDeviceValues(device)
-    }
-
-    fun setTemperature(temperature: Float, device: Heater) {
-        _temperature.value = temperature
-
-        updateDeviceValues(device)
-    }
-
-    fun setDeviceValues(device: Heater) {
-        _mode.value = setModeBasedOnValue(device.mode)
-        _temperature.value = device.temperature
-    }
-
-    private fun setModeBasedOnValue(mode: DeviceMode): Boolean = mode == DeviceMode.ON
-
-    private fun updateDeviceValues(device: Heater) {
-        viewModelScope.launch {
-            deviceInteractor.updateDevice(
-                Heater(
-                    id = device.id,
-                    deviceName = device.deviceName,
-                    mode = if (_mode.value == true) DeviceMode.ON else DeviceMode.OFF,
-                    temperature = _temperature.value ?: 7.0f
-                )
+    fun setDevice(device: Heater) {
+        screenStateMutable.update {
+            it.copy(
+                heater = device.copy(),
+                currentRawTemp = device.rawTemperature
             )
         }
     }
 
-    override fun createInitialState(): HeaterScreenState {
-        return HeaterScreenState()
+    fun setMode(isEnabled: Boolean) {
+        screenStateMutable.update {
+            it.copy(
+                heater = it.heater.copy(
+                    mode = if (isEnabled) DeviceMode.ON else DeviceMode.OFF
+                )
+            )
+        }
+        updateDeviceValues()
     }
 
+    fun setRawTemperature(rawTemp: Int) {
+        screenStateMutable.update {
+            it.copy(
+                heater = it.heater.copy(
+                    temperature = (rawTemp.toFloat() * TEMPERATURE_STEP) + MIN_TEMPERATURE
+                ),
+                currentRawTemp = rawTemp
+            )
+        }
+        updateDeviceValues()
+    }
+
+    private fun updateDeviceValues() {
+        viewModelScope.launch {
+            screenState.value?.let {
+                deviceInteractor.updateDevice(it.heater.copy())
+            }
+        }
+    }
+
+    override fun createInitialState(): HeaterScreenState = HeaterScreenState(
+        Heater(
+            id = 0,
+            deviceName = "",
+            mode = DeviceMode.OFF,
+            temperature = 7.0f,
+        ),
+        minTemp = MIN_TEMPERATURE,
+        maxTemp = MAX_TEMPERATURE,
+        temperatureStep = TEMPERATURE_STEP,
+        currentRawTemp = 0
+    )
+
+    private val Heater.rawTemperature: Int
+        get() = ((temperature - MIN_TEMPERATURE) / TEMPERATURE_STEP).toInt()
+
     override fun onAttached() {
-        //TODO
+        // Not needed
+    }
+
+    companion object {
+        private const val MIN_TEMPERATURE = 7
+        private const val MAX_TEMPERATURE = 28
+        private const val TEMPERATURE_STEP = 0.5f
     }
 }

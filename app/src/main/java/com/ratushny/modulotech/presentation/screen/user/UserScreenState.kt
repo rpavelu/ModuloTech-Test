@@ -23,7 +23,6 @@ data class UserScreenState(
             country
         )
 
-
     data class Field(
         val value: String = "",
         var error: FieldError? = null

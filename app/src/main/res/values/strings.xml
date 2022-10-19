@@ -3,26 +3,21 @@
 
     <string name="devices_fragment_label">Devices</string>
     <string name="profile">Profile</string>
-    <string name="search">Search</string>
-    <string name="devices_list_error">Try to refresh</string>
-    <string name="devices_list_empty">Devices list is empty</string>
-    <string name="dark_theme">Dark theme</string>
     <string name="filter">Filter</string>
     <string name="refresh">Refresh</string>
-    <string name="confirmation">Confirmation</string>
 
     <string name="light">Light</string>
     <string name="heater">Heater</string>
     <string name="roller_shutter">Roller Shutter</string>
 
     <string name="mode">Mode</string>
-    <string name="position">Position</string>
     <string name="on_off">ON/OFF</string>
 
     <string name="zero" translatable="false">0</string>
 
     <string name="intensity">Intensity</string>
     <string name="temperature">Temperature</string>
+    <string name="position">Position</string>
 
     <string name="user">User</string>
     <string name="first_name">First name</string>
@@ -34,10 +29,16 @@
     <string name="street">Street</string>
     <string name="street_code">Street code</string>
     <string name="country">Country</string>
+
+    <string name="confirmation">Confirmation</string>
     <string name="data_updated">Data updated!</string>
+
+    <string name="devices_list_error">Try to refresh</string>
+    <string name="devices_list_empty">Devices list is empty</string>
 
     <string name="user_error_empty">Field must not be empty</string>
     <string name="user_error_min_length">Field length must be more than %1$d</string>
     <string name="user_error_date_format">Date must be in format %1$s</string>
 
+    <string name="heater_tempreature_label" translatable="false">%1$.1f \u2103</string>
 </resources>

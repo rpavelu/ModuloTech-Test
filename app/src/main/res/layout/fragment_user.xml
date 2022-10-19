@@ -10,8 +10,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/profile_image_size"
+            android:layout_height="@dimen/profile_image_size"
             android:layout_margin="@dimen/basic_margin"
             android:src="@drawable/ic_account_circle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,6 +40,7 @@
                 android:id="@+id/first_name_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,6 +56,7 @@
                 android:id="@+id/last_name_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,6 +98,7 @@
                 android:id="@+id/city_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -158,6 +161,7 @@
                 android:id="@+id/country_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 

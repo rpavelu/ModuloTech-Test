@@ -1,6 +1,7 @@
 package com.ratushny.modulotech.presentation.extensions
 
 import android.view.View
+import android.widget.SeekBar
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
 
@@ -24,4 +25,20 @@ fun TextInputEditText.updateTextIfNeeded(newText: String) {
             selectionEnd.coerceAtMost(newText.length)
         )
     }
+}
+
+fun SeekBar.doOnProgressChanged(action: (Int) -> Unit) {
+    setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekbar: SeekBar?, progress: Int, fromUser: Boolean) {
+            action(progress)
+        }
+
+        override fun onStartTrackingTouch(seekbar: SeekBar?) {
+            // Not used
+        }
+
+        override fun onStopTrackingTouch(seekbar: SeekBar?) {
+            // Not used
+        }
+    })
 }
