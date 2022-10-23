@@ -2,11 +2,11 @@ package com.ratushny.modulotech.data.database.mapper
 
 import com.ratushny.modulotech.data.database.entity.DeviceEntity
 import com.ratushny.modulotech.domain.model.device.Device
+import com.ratushny.modulotech.domain.model.device.Device.Heater
+import com.ratushny.modulotech.domain.model.device.Device.Light
+import com.ratushny.modulotech.domain.model.device.Device.RollerShutter
 import com.ratushny.modulotech.domain.model.device.DeviceMode
-import com.ratushny.modulotech.domain.model.device.Heater
-import com.ratushny.modulotech.domain.model.device.Light
 import com.ratushny.modulotech.domain.model.device.ProductType
-import com.ratushny.modulotech.domain.model.device.RollerShutter
 
 fun DeviceEntity.convertToAppEntity(): Device = when (productType) {
     ProductType.LIGHT -> Light(

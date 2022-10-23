@@ -12,5 +12,4 @@ class DeviceInteractor(
     suspend fun updateDevice(device: Device) = repository.updateDevice(device)
 
     suspend fun deleteDevice(device: Device) = repository.deleteDevice(device)
-
 }

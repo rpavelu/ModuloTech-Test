@@ -20,7 +20,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/user_text"
-            style="@style/Header"
+            style="@style/Text.Header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/basic_margin"
@@ -41,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
+                android:maxLength="@integer/edittext_max_value_naming"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
+                android:maxLength="@integer/edittext_max_value_naming"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -73,12 +75,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date"
+                android:maxLength="@integer/edittext_max_value_date"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/address"
-            style="@style/Header"
+            style="@style/Text.Header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/basic_margin"
@@ -99,6 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
+                android:maxLength="@integer/edittext_max_value_city"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,6 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
+                android:maxLength="@integer/edittext_max_value_postal_code"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,6 +135,7 @@
                 android:id="@+id/street_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="@integer/edittext_max_value_street"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,6 +151,7 @@
                 android:id="@+id/street_code_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="@integer/edittext_max_value_street_code"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -162,6 +169,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
+                android:maxLength="@integer/edittext_max_value_country"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -17,8 +17,6 @@ class RollerShutterFragment :
 
     private val args by navArgs<RollerShutterFragmentArgs>()
 
-    private val device by lazy { args.device }
-
     override fun inflateView(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -27,7 +25,7 @@ class RollerShutterFragment :
     }
 
     override fun initViews() {
-        viewModel.setDevice(device)
+        viewModel.setDevice(args.device)
         binding.seekbar.doOnProgressChanged {
             viewModel.setPosition(it)
         }
@@ -36,7 +34,7 @@ class RollerShutterFragment :
     override fun screenStateObserver(): Observer<RollerShutterScreenState> = Observer {
         with(binding) {
             seekbar.progress = it.rollerShutter.position
-            seekbarValue.text = it.rollerShutter.position.toString()
+            textSeekbarValue.text = it.rollerShutter.position.toString()
         }
     }
 }

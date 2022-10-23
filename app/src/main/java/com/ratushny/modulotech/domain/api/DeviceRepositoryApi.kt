@@ -9,5 +9,4 @@ interface DeviceRepositoryApi {
     suspend fun updateDevice(device: Device)
 
     suspend fun deleteDevice(device: Device)
-
 }

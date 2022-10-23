@@ -1,9 +1,13 @@
 package com.ratushny.modulotech.data.network.model
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class AddressResponse(
-    val city: String?,
-    val postalCode: String?,
-    val street: String?,
-    val streetCode: String?,
-    val country: String?,
+    @Json(name = "city") val city: String?,
+    @Json(name = "postalCode") val postalCode: String?,
+    @Json(name = "street") val street: String?,
+    @Json(name = "streetCode") val streetCode: String?,
+    @Json(name = "country") val country: String?,
 )

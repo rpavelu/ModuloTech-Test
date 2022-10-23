@@ -4,7 +4,6 @@ import android.app.Application
 import com.ratushny.modulotech.BuildConfig
 import com.ratushny.modulotech.data.di.databaseModule
 import com.ratushny.modulotech.data.di.networkModule
-import com.ratushny.modulotech.data.di.preferencesModule
 import com.ratushny.modulotech.data.di.repositoryModule
 import com.ratushny.modulotech.domain.di.interactorModule
 import com.ratushny.modulotech.presentation.di.deviceListFragmentModule
@@ -33,7 +32,6 @@ class App : Application() {
         includes(
             databaseModule,
             networkModule,
-            preferencesModule,
             repositoryModule,
         )
     }

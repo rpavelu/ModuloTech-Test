@@ -89,19 +89,23 @@ class UserFragment : BaseFragment<UserScreenState, FragmentUserBinding, UserView
         }
     }
 
-    private fun TextInputLayout.setError(error: UserScreenState.FieldError?) = when (error) {
-        is UserScreenState.DateFormatError -> setError(
-            getString(R.string.user_error_date_format, error.dateFormat)
-        )
-        UserScreenState.EmptyFieldError -> setError(
-            getString(R.string.user_error_empty)
-        )
-        is UserScreenState.MinLengthError -> setError(
-            getString(R.string.user_error_min_length, error.minLength),
-        )
-        null -> {
-            setError(null)
-            isErrorEnabled = false
+    private fun TextInputLayout.setError(error: UserScreenState.FieldError?) = setError(
+        when (error) {
+            is UserScreenState.DateFormatError -> getString(
+                R.string.user_error_date_format,
+                error.dateFormat
+            )
+            UserScreenState.EmptyFieldError -> getString(
+                R.string.user_error_empty
+            )
+            is UserScreenState.MinLengthError -> getString(
+                R.string.user_error_min_length,
+                error.minLength
+            )
+            null -> {
+                isErrorEnabled = false
+                null
+            }
         }
-    }
+    )
 }

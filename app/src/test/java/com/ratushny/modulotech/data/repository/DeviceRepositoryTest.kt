@@ -6,34 +6,31 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.ratushny.modulotech.data.database.Database
 import com.ratushny.modulotech.data.database.mapper.convertToDatabaseEntity
-import com.ratushny.modulotech.domain.model.device.Device
+import com.ratushny.modulotech.domain.model.device.Device.Heater
 import com.ratushny.modulotech.domain.model.device.DeviceMode
-import com.ratushny.modulotech.domain.model.device.Heater
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class DeviceRepositoryTest {
 
-    private lateinit var db: Database
-    private lateinit var repository: DeviceRepository
-    private val deviceDao by lazy { db.deviceDao() }
+    private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    @Before
-    fun init() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(
+    private val db: Database by lazy {
+        Room.inMemoryDatabaseBuilder(
             context,
             Database::class.java
         ).build()
-        repository = DeviceRepository(deviceDao)
     }
+
+    private val deviceDao by lazy { db.deviceDao() }
+
+    private val repository: DeviceRepository by lazy { DeviceRepository(deviceDao) }
 
     @After
     fun closeDb() {
@@ -41,7 +38,7 @@ class DeviceRepositoryTest {
     }
 
     @Test
-    fun loadDevices() {
+    fun loadDevices_insertToEmpty_returnNotEmpty() {
         val heater = Heater(
             id = 0,
             deviceName = "test",
@@ -51,7 +48,7 @@ class DeviceRepositoryTest {
         runBlocking {
             MatcherAssert.assertThat(
                 repository.loadDevices(),
-                CoreMatchers.equalTo(emptyList<Device>())
+                CoreMatchers.equalTo(emptyList())
             )
             deviceDao.insert(heater.convertToDatabaseEntity())
             MatcherAssert.assertThat(repository.loadDevices(), CoreMatchers.equalTo(listOf(heater)))
@@ -59,7 +56,7 @@ class DeviceRepositoryTest {
     }
 
     @Test
-    fun updateDevice() {
+    fun updateDevice_listOfHeater_listOfUpdatedHeater() {
         val heater = Heater(
             id = 0,
             deviceName = "test",
@@ -80,7 +77,7 @@ class DeviceRepositoryTest {
     }
 
     @Test
-    fun deleteDevice() {
+    fun deleteDevice_listOfHeater_removeHeaterFromList() {
         val heater = Heater(
             id = 0,
             deviceName = "test",

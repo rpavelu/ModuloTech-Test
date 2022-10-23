@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/mode_text"
+        android:id="@+id/text_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/basic_margin"
@@ -18,14 +18,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/mode_switch"
+        android:id="@+id/switch_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/basic_margin"
         android:text="@string/on_off"
-        app:layout_constraintBottom_toBottomOf="@id/mode_text"
+        app:layout_constraintBottom_toBottomOf="@id/text_mode"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/mode_text" />
+        app:layout_constraintTop_toTopOf="@id/text_mode" />
 
     <View
         android:id="@+id/divider"
@@ -34,10 +34,10 @@
         android:layout_margin="@dimen/basic_margin"
         android:background="@color/black"
         android:backgroundTint="?colorControlNormal"
-        app:layout_constraintTop_toBottomOf="@id/mode_text" />
+        app:layout_constraintTop_toBottomOf="@id/text_mode" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/temperature_text"
+        android:id="@+id/text_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/basic_margin"
@@ -47,15 +47,15 @@
         app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/seekbar_value"
+        android:id="@+id/text_seekbar_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/basic_margin"
         android:text="@string/zero"
         android:textSize="@dimen/text_size_value"
-        app:layout_constraintBottom_toBottomOf="@id/temperature_text"
+        app:layout_constraintBottom_toBottomOf="@id/text_temperature"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/temperature_text"
+        app:layout_constraintTop_toTopOf="@id/text_temperature"
         tools:text="15.5\u2103" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
@@ -64,6 +64,6 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/basic_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/temperature_text" />
+        app:layout_constraintTop_toBottomOf="@id/text_temperature" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,8 +16,17 @@ import org.koin.androidx.scope.ScopeActivity
 
 class MainActivity : ScopeActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private val appBarConfiguration: AppBarConfiguration by lazy {
+        AppBarConfiguration(
+            setOf(
+                R.id.DevicesListFragment,
+                R.id.ProfileFragment,
+            )
+        )
+    }
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
 
     private val navController: NavController by lazy {
         val navHostFragment =
@@ -28,57 +37,53 @@ class MainActivity : ScopeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setSupportActionBar(binding.toolbar)
-
-        appBarConfiguration =
-            AppBarConfiguration(
-                setOf(
-                    R.id.DevicesListFragment,
-                    R.id.ProfileFragment,
-                )
-            )
-
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.bottomNavigation.setOnItemSelectedListener {
-
-            when (it.itemId) {
-                R.id.devices_page -> {
-                    if (it.itemId != binding.bottomNavigation.selectedItemId)
-                        navController.navigate(R.id.open_devices_fragment)
-                    true
-                }
-                R.id.profile_page -> {
-                    if (it.itemId != binding.bottomNavigation.selectedItemId)
-                        navController.navigate(R.id.open_profile_fragment)
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     override fun setContentView(view: View) {
         super.setContentView(view)
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            binding.toolbar.apply {
-                setPadding(paddingLeft, insets.top, paddingRight, paddingBottom)
+
+            with(binding) {
+                navHostFragmentContentMain.apply {
+                    setPadding(
+                        paddingLeft,
+                        paddingTop,
+                        paddingRight,
+                        bottomNavigation.measuredHeight
+                    )
+                }
+
+                toolbar.apply {
+                    setPadding(paddingLeft, insets.top, paddingRight, paddingBottom)
+                }
+
+                bottomNavigation.apply {
+                    setPadding(paddingLeft, paddingTop, paddingRight, insets.bottom)
+                }
+
+                bottomNavigation.setOnItemSelectedListener {
+                    when (val id = it.itemId) {
+                        R.id.devices_page -> {
+                            if (id != bottomNavigation.selectedItemId) {
+                                navController.navigate(R.id.open_devices_fragment)
+                            }
+                            true
+                        }
+                        R.id.profile_page -> {
+                            if (id != bottomNavigation.selectedItemId) {
+                                navController.navigate(R.id.open_profile_fragment)
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+                }
             }
-            binding.bottomNavigation.apply {
-                setPadding(paddingLeft, paddingTop, paddingRight, insets.bottom)
-            }
-            binding.navHostFragmentContentMain.apply {
-                setPadding(
-                    paddingLeft,
-                    paddingTop,
-                    paddingRight,
-                    binding.bottomNavigation.measuredHeight
-                )
-            }
+
             WindowInsetsCompat.CONSUMED
         }
     }

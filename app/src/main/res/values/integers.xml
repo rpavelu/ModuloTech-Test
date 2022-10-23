@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="edittext_max_value_naming">20</integer>
+    <integer name="edittext_max_value_date">10</integer>
+    <integer name="edittext_max_value_city">24</integer>
+    <integer name="edittext_max_value_postal_code">9</integer>
+    <integer name="edittext_max_value_street">50</integer>
+    <integer name="edittext_max_value_street_code">6</integer>
+    <integer name="edittext_max_value_country">74</integer>
+</resources>

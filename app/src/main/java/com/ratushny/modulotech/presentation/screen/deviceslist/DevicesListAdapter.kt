@@ -2,53 +2,45 @@ package com.ratushny.modulotech.presentation.screen.deviceslist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ratushny.modulotech.R
 import com.ratushny.modulotech.databinding.ItemDeviceBinding
 import com.ratushny.modulotech.domain.model.device.Device
-import com.ratushny.modulotech.domain.model.device.Heater
-import com.ratushny.modulotech.domain.model.device.Light
-import com.ratushny.modulotech.domain.model.device.RollerShutter
+import com.ratushny.modulotech.domain.model.device.Device.Heater
+import com.ratushny.modulotech.domain.model.device.Device.Light
+import com.ratushny.modulotech.domain.model.device.Device.RollerShutter
 
 class DevicesListAdapter(
     private val onClick: (device: Device) -> Unit
-) : RecyclerView.Adapter<DevicesListAdapter.ViewHolder>() {
+) : ListAdapter<Device, DevicesListAdapter.ViewHolder>(DevicesListDiffUtilCallback()) {
 
-    private var devices: List<Device> = emptyList()
-
-    fun updateDevicesList(list: List<Device>) {
-        val diffCallback = DevicesListDiffUtilCallback(devices, list)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        diffResult.dispatchUpdatesTo(this)
-
-        this.devices = list
-    }
-
-    fun getDeviceByPosition(position: Int): Device = devices[position]
+    fun getDeviceByPosition(position: Int): Device = getItem(position)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemDeviceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(parent)
     }
 
-    override fun getItemCount() = devices.size
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(devices[position], onClick)
+        holder.bind(getItem(position), onClick)
     }
 
     inner class ViewHolder(
-        private val binding: ItemDeviceBinding
+        private val parent: ViewGroup,
+        private val binding: ItemDeviceBinding = ItemDeviceBinding.inflate(
+            LayoutInflater.from(
+                parent.context
+            ), parent, false
+        )
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             device: Device,
             onClick: (device: Device) -> Unit
         ) = with(binding) {
-            deviceName.text = device.deviceName
+            textDeviceName.text = device.deviceName
 
-            deviceImage.setImageResource(
+            imageDevice.setImageResource(
                 when (device) {
                     is Light -> R.drawable.ic_bulb
                     is Heater -> R.drawable.ic_heater
@@ -56,9 +48,12 @@ class DevicesListAdapter(
                 }
             )
 
-            deviceValue.text = when (device) {
+            textDeviceValue.text = when (device) {
                 is Light -> device.intensity.toString()
-                is Heater -> device.temperature.toString()
+                is Heater -> itemView.context.getString(
+                    R.string.format_heater_temperature,
+                    device.temperature
+                )
                 is RollerShutter -> device.position.toString()
             }
 

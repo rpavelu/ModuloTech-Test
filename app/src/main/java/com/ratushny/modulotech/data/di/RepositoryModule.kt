@@ -14,7 +14,6 @@ val repositoryModule = module {
             service = get(),
             deviceDao = get(),
             userDao = get(),
-            preferencesRepository = get(),
         )
     }
     factory<DeviceRepositoryApi> {

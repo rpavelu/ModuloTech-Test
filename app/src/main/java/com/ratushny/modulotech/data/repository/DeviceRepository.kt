@@ -29,5 +29,4 @@ class DeviceRepository(
             deviceDao.delete(device.convertToDatabaseEntity())
         }
     }
-
 }

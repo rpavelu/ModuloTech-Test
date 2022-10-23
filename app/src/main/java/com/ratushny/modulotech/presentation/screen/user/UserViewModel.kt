@@ -17,9 +17,12 @@ class UserViewModel(
     private val userInteractor: UserInteractor
 ) : BaseViewModel<UserScreenState>() {
 
+    override val initialState: UserScreenState
+        get() = UserScreenState()
+
     private var user: User? by Delegates.observable(null) { _, _, newUser ->
         newUser ?: return@observable
-        screenStateMutable.update {
+        _screenState.update {
             UserScreenState(
                 firstName = UserScreenState.Field(newUser.firstName),
                 lastName = UserScreenState.Field(newUser.lastName),
@@ -40,10 +43,6 @@ class UserViewModel(
     private val dateFormat: SimpleDateFormat
         get() = SimpleDateFormat(DATE_FORMAT, Locale.getDefault())
 
-    override fun createInitialState(): UserScreenState {
-        return UserScreenState()
-    }
-
     override fun onAttached() {
         viewModelScope.launch {
             user = userInteractor.loadUser()
@@ -51,35 +50,35 @@ class UserViewModel(
     }
 
     fun updateFirstName(text: String) {
-        screenStateMutable.update { it.copy(firstName = UserScreenState.Field(text)) }
+        _screenState.update { copy(firstName = UserScreenState.Field(text)) }
     }
 
     fun updateLastName(text: String) {
-        screenStateMutable.update { it.copy(lastName = UserScreenState.Field(text)) }
+        _screenState.update { copy(lastName = UserScreenState.Field(text)) }
     }
 
     fun updateBirthdate(text: String) {
-        screenStateMutable.update { it.copy(birthDate = UserScreenState.Field(text)) }
+        _screenState.update { copy(birthDate = UserScreenState.Field(text)) }
     }
 
     fun updateCity(text: String) {
-        screenStateMutable.update { it.copy(city = UserScreenState.Field(text)) }
+        _screenState.update { copy(city = UserScreenState.Field(text)) }
     }
 
     fun updatePostalCode(text: String) {
-        screenStateMutable.update { it.copy(postalCode = UserScreenState.Field(text)) }
+        _screenState.update { copy(postalCode = UserScreenState.Field(text)) }
     }
 
     fun updateStreet(text: String) {
-        screenStateMutable.update { it.copy(street = UserScreenState.Field(text)) }
+        _screenState.update { copy(street = UserScreenState.Field(text)) }
     }
 
     fun updateStreetCode(text: String) {
-        screenStateMutable.update { it.copy(streetCode = UserScreenState.Field(text)) }
+        _screenState.update { copy(streetCode = UserScreenState.Field(text)) }
     }
 
     fun updateCountry(text: String) {
-        screenStateMutable.update { it.copy(country = UserScreenState.Field(text)) }
+        _screenState.update { copy(country = UserScreenState.Field(text)) }
     }
 
     fun handleSaveClicked() {
@@ -106,13 +105,13 @@ class UserViewModel(
     }
 
     private fun validateUserData(onSuccess: () -> Unit) {
-        val currentState = screenStateMutable.value ?: return
+        val currentState = _screenState.value ?: return
         currentState.allFields.forEach {
             it.validateEmpty()
         }
         currentState.postalCode.validateMinLength(POSTAL_CODE_MIN_LENGTH)
         currentState.birthDate.validateDateFormat(dateFormat)
-        screenStateMutable.update { currentState.copy() }
+        _screenState.update { currentState.copy() }
         if (currentState.allFields.none { it.error != null }) {
             onSuccess()
         }

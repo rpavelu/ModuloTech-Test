@@ -3,17 +3,11 @@ package com.ratushny.modulotech.presentation.screen.deviceslist
 import androidx.recyclerview.widget.DiffUtil
 import com.ratushny.modulotech.domain.model.device.Device
 
-class DevicesListDiffUtilCallback(
-    private val oldDevices: List<Device>,
-    private val newDevices: List<Device>
-) : DiffUtil.Callback() {
-    override fun getOldListSize(): Int = oldDevices.size
+class DevicesListDiffUtilCallback : DiffUtil.ItemCallback<Device>() {
 
-    override fun getNewListSize(): Int = newDevices.size
+    override fun areItemsTheSame(oldItem: Device, newItem: Device): Boolean =
+        oldItem.id == newItem.id
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldDevices[oldItemPosition].id == newDevices[newItemPosition].id
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldDevices[oldItemPosition] == newDevices[newItemPosition]
+    override fun areContentsTheSame(oldItem: Device, newItem: Device): Boolean =
+        oldItem == newItem
 }

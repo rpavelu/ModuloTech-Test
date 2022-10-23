@@ -4,4 +4,5 @@ enum class ProductTypeResponse {
     Light,
     Heater,
     RollerShutter,
+    ;
 }

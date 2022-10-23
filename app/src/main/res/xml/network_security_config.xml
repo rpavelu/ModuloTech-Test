@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- disable cleartext traffic for all endpoints (default Android 9+) -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <!-- ensure only specific app endpoints to interact by http including subdomains -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">storage42.com</domain>
+    </domain-config>
+    <!-- for debug builds: allow cleartext traffic to test api calls with Fiddler / Charles / other -->
+    <debug-overrides cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

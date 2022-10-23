@@ -38,6 +38,4 @@
     <string name="user_error_empty">Field must not be empty</string>
     <string name="user_error_min_length">Field length must be more than %1$d</string>
     <string name="user_error_date_format">Date must be in format %1$s</string>
-
-    <string name="heater_tempreature_label" translatable="false">%1$.1f \u2103</string>
 </resources>

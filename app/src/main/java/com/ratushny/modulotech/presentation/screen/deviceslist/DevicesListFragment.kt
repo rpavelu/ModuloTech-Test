@@ -7,16 +7,16 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ratushny.modulotech.R
 import com.ratushny.modulotech.databinding.FragmentDeviceListBinding
-import com.ratushny.modulotech.domain.model.device.Heater
-import com.ratushny.modulotech.domain.model.device.Light
-import com.ratushny.modulotech.domain.model.device.RollerShutter
+import com.ratushny.modulotech.domain.model.device.Device.Heater
+import com.ratushny.modulotech.domain.model.device.Device.Light
+import com.ratushny.modulotech.domain.model.device.Device.RollerShutter
 import com.ratushny.modulotech.presentation.extensions.attachSwipeToDelete
-import com.ratushny.modulotech.presentation.extensions.changeVisibility
 import com.ratushny.modulotech.presentation.screen.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,25 +26,21 @@ class DevicesListFragment :
 
     override val viewModel: DevicesListViewModel by viewModel()
 
-    private val deviceAdapter: DevicesListAdapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val deviceAdapter: DevicesListAdapter by lazy {
         DevicesListAdapter { device ->
-            when (device) {
-                is Light -> {
-                    navigation.navigate(
+            navigation.navigate(
+                when (device) {
+                    is Light -> {
                         DevicesListFragmentDirections.actionHomeToLight(device)
-                    )
-                }
-                is Heater -> {
-                    navigation.navigate(
+                    }
+                    is Heater -> {
                         DevicesListFragmentDirections.actionHomeToHeater(device)
-                    )
-                }
-                is RollerShutter -> {
-                    navigation.navigate(
+                    }
+                    is RollerShutter -> {
                         DevicesListFragmentDirections.actionHomeToRollerShutter(device)
-                    )
+                    }
                 }
-            }
+            )
         }
     }
 
@@ -57,13 +53,13 @@ class DevicesListFragment :
 
     override fun initViews() {
         initToolbarMenu()
-        binding.deviceListRecyclerview.apply {
+        binding.recyclerviewDevices.apply {
             adapter = deviceAdapter
             attachSwipeToDelete(deviceAdapter::getDeviceByPosition) {
                 viewModel.removeDevice(it)
             }
         }
-        viewModel.filterDialogState.observe(viewLifecycleOwner) {
+        viewModel.filterDialogEvent.observe(viewLifecycleOwner) {
             showFiltersAlertDialog(it)
         }
     }
@@ -89,7 +85,7 @@ class DevicesListFragment :
             .setTitle(R.string.filter)
             .setMultiChoiceItems(
                 filters.map { getString(it.stringRes) }.toTypedArray(),
-                filters.map { it.state }.toBooleanArray()
+                filters.map { it.isEnabled }.toBooleanArray()
             ) { _, position, checked ->
                 viewModel.updateFilterState(filters[position].productType, checked)
             }
@@ -98,17 +94,13 @@ class DevicesListFragment :
 
     override fun screenStateObserver(): Observer<DevicesListScreenState> = Observer { state ->
         with(binding) {
-            loadingProgress.changeVisibility(state.state == DevicesListScreenState.State.LOADING)
-            errorText.changeVisibility(state.state == DevicesListScreenState.State.ERROR)
-            emptyText.changeVisibility(
-                state.state == DevicesListScreenState.State.SUCCESS
-                        && state.filteredDevices.isEmpty()
-            )
-            deviceListRecyclerview.changeVisibility(
-                state.state == DevicesListScreenState.State.SUCCESS
-                        && state.filteredDevices.isNotEmpty()
-            )
-            deviceAdapter.updateDevicesList(state.filteredDevices)
+            progressLoading.isVisible = state.state == DevicesListScreenState.State.LOADING
+            textEmpty.isVisible = state.state == DevicesListScreenState.State.ERROR
+            textEmpty.isVisible = state.state == DevicesListScreenState.State.SUCCESS
+                    && state.filteredDevices.isEmpty()
+            recyclerviewDevices.isVisible = state.state == DevicesListScreenState.State.SUCCESS
+                    && state.filteredDevices.isNotEmpty()
+            deviceAdapter.submitList(state.filteredDevices)
         }
     }
 }

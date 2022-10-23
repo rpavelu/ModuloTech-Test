@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/position_text"
+        android:id="@+id/text_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/basic_margin"
@@ -16,14 +16,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/seekbar_value"
+        android:id="@+id/text_seekbar_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/basic_margin"
         android:textSize="@dimen/text_size_value"
-        app:layout_constraintBottom_toBottomOf="@id/position_text"
+        app:layout_constraintBottom_toBottomOf="@id/text_position"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/position_text"
+        app:layout_constraintTop_toTopOf="@id/text_position"
         tools:text="70" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
@@ -32,8 +32,8 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/basic_margin"
         android:rotation="270"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/position_text"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/text_position" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

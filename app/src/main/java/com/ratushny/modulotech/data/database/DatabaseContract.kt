@@ -14,6 +14,8 @@ object DatabaseContract {
 
         const val SELECT_ALL = "SELECT * FROM $TABLE_NAME"
         const val DELETE_ALL = "DELETE FROM $TABLE_NAME"
+
+        const val IS_EMPTY = "SELECT (SELECT COUNT(*) FROM $TABLE_NAME) == 0"
     }
 
     object User {

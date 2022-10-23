@@ -27,7 +27,7 @@ class HeaterFragment : BaseFragment<HeaterScreenState, FragmentHeaterBinding, He
     override fun initViews() {
         viewModel.setDevice(args.device)
 
-        binding.modeSwitch.setOnCheckedChangeListener { _, isChecked ->
+        binding.switchMode.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setMode(isChecked)
         }
 
@@ -38,12 +38,13 @@ class HeaterFragment : BaseFragment<HeaterScreenState, FragmentHeaterBinding, He
 
     override fun screenStateObserver(): Observer<HeaterScreenState> = Observer<HeaterScreenState> {
         with(binding) {
-            modeSwitch.isChecked = it.heater.mode == DeviceMode.ON
+            switchMode.isChecked = it.heater.mode == DeviceMode.ON
             seekbar.apply {
                 max = ((it.maxTemp - it.minTemp) / it.temperatureStep).toInt()
             }
 
-            seekbarValue.text = getString(R.string.heater_tempreature_label, it.heater.temperature)
+            textSeekbarValue.text =
+                getString(R.string.format_heater_temperature, it.heater.temperature)
             seekbar.progress = it.currentRawTemp
         }
     }

@@ -6,10 +6,10 @@ import com.ratushny.modulotech.R
 import com.ratushny.modulotech.domain.interactor.DeviceInteractor
 import com.ratushny.modulotech.domain.interactor.ModuloInteractor
 import com.ratushny.modulotech.domain.model.device.Device
-import com.ratushny.modulotech.domain.model.device.Heater
-import com.ratushny.modulotech.domain.model.device.Light
+import com.ratushny.modulotech.domain.model.device.Device.Heater
+import com.ratushny.modulotech.domain.model.device.Device.Light
+import com.ratushny.modulotech.domain.model.device.Device.RollerShutter
 import com.ratushny.modulotech.domain.model.device.ProductType
-import com.ratushny.modulotech.domain.model.device.RollerShutter
 import com.ratushny.modulotech.presentation.common.SingleLiveData
 import com.ratushny.modulotech.presentation.extensions.update
 import com.ratushny.modulotech.presentation.screen.BaseViewModel
@@ -22,35 +22,36 @@ class DevicesListViewModel(
     private val deviceInteractor: DeviceInteractor,
 ) : BaseViewModel<DevicesListScreenState>() {
 
+    override val initialState: DevicesListScreenState
+        get() = DevicesListScreenState(
+            filteredDevices = emptyList(),
+            state = DevicesListScreenState.State.LOADING,
+            filters = listOf(
+                DevicesListScreenState.Filter(
+                    ProductType.HEATER,
+                    R.string.heater,
+                    true
+                ),
+                DevicesListScreenState.Filter(
+                    ProductType.LIGHT,
+                    R.string.light,
+                    true
+                ),
+                DevicesListScreenState.Filter(
+                    ProductType.ROLLERSHUTTER,
+                    R.string.roller_shutter,
+                    true
+                ),
+            )
+        )
+
     private var devices by Delegates.observable(emptyList<Device>()) { _, _, _ ->
         updateFilteredDevices()
     }
 
-    private val _filtersDialogState = SingleLiveData<List<DevicesListScreenState.Filter>>()
-    val filterDialogState: LiveData<List<DevicesListScreenState.Filter>>
-        get() = _filtersDialogState
-
-    override fun createInitialState(): DevicesListScreenState = DevicesListScreenState(
-        filteredDevices = emptyList(),
-        state = DevicesListScreenState.State.LOADING,
-        filters = listOf(
-            DevicesListScreenState.Filter(
-                ProductType.HEATER,
-                R.string.heater,
-                true
-            ),
-            DevicesListScreenState.Filter(
-                ProductType.LIGHT,
-                R.string.light,
-                true
-            ),
-            DevicesListScreenState.Filter(
-                ProductType.ROLLERSHUTTER,
-                R.string.roller_shutter,
-                true
-            ),
-        )
-    )
+    private val _filtersDialogEvent = SingleLiveData<List<DevicesListScreenState.Filter>>()
+    val filterDialogEvent: LiveData<List<DevicesListScreenState.Filter>>
+        get() = _filtersDialogEvent
 
     override fun onAttached() {
         viewModelScope.launch {
@@ -60,29 +61,28 @@ class DevicesListViewModel(
     }
 
     private fun updateFilteredDevices() {
-        screenStateMutable.update {
-            it.copy(
-                filteredDevices = devices.filter { device ->
-                    device.passedFilter()
-                },
+        _screenState.update {
+            copy(
+                filteredDevices = devices.filter { device -> device.passedFilter() },
                 state = DevicesListScreenState.State.SUCCESS
             )
         }
     }
 
     fun handleFilterClicked() {
-        _filtersDialogState.value = screenState.value?.filters ?: emptyList()
+        _filtersDialogEvent.value = screenState.value?.filters ?: emptyList()
     }
 
     fun updateFilterState(productType: ProductType, enabled: Boolean) {
-        screenStateMutable.update {
-            it.copy(filters = it.filters.map { filter ->
-                if (filter.productType == productType) {
-                    filter.copy(state = enabled)
-                } else {
-                    filter
-                }
-            })
+        _screenState.update {
+            copy(filters = filters
+                .map { filter ->
+                    if (filter.productType == productType) {
+                        filter.copy(isEnabled = enabled)
+                    } else {
+                        filter
+                    }
+                })
         }
         updateFilteredDevices()
     }
@@ -90,16 +90,14 @@ class DevicesListViewModel(
     fun removeDevice(removedDevice: Device) {
         viewModelScope.launch(Dispatchers.Main) {
             deviceInteractor.deleteDevice(removedDevice)
-            screenStateMutable.update {
-                it.copy(filteredDevices = it.filteredDevices.filter { device ->
-                    device != removedDevice
-                })
+            _screenState.update {
+                copy(filteredDevices = filteredDevices.filter { device -> device != removedDevice })
             }
         }
     }
 
     fun refreshData() {
-        screenStateMutable.update { it.copy(state = DevicesListScreenState.State.LOADING) }
+        _screenState.update { copy(state = DevicesListScreenState.State.LOADING) }
         viewModelScope.launch {
             moduloInteractor.loadData(force = true)
             devices = deviceInteractor.loadDevices()
@@ -107,10 +105,10 @@ class DevicesListViewModel(
     }
 
     private fun Device.passedFilter(): Boolean = screenState.value?.filters?.firstOrNull { filter ->
-        when (this) {
-            is Heater -> filter.productType == ProductType.HEATER
-            is Light -> filter.productType == ProductType.LIGHT
-            is RollerShutter -> filter.productType == ProductType.ROLLERSHUTTER
+        filter.productType == when (this) {
+            is Heater -> ProductType.HEATER
+            is Light -> ProductType.LIGHT
+            is RollerShutter -> ProductType.ROLLERSHUTTER
         }
-    }?.state ?: false
+    }?.isEnabled ?: false
 }

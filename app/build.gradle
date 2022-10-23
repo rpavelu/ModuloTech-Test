@@ -2,7 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'kotlin-kapt'
+    id "com.google.devtools.ksp" version "1.7.20-1.0.7"
+    id "kotlin-parcelize"
 }
 
 android {
@@ -20,23 +21,51 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments = [
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"
+                ]
             }
         }
+
+        buildConfigField "String", 'BASE_STORAGE_URL', '"http://storage42.com/"'
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            splits.abi.enable = false
+            splits.density.enable = false
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    lintOptions {
+        abortOnError true
+        checkAllWarnings true
+        disable 'AllowBackup'
+        disable 'ContentDescription'
+        disable 'InvalidPackage'
+        disable 'SpUsage'
+        disable 'IconMissingDensityFolder'
+        disable 'SelectableText'
+        disable 'RtlCompat', 'RtlEnabled', 'RtlHardcoded', 'RtlSymmetry'
+        disable 'MissingPrefix'
+        disable 'MissingRegistered'
+        disable 'LockedOrientationActivity'
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         viewBinding true
@@ -50,7 +79,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.annotation:annotation:1.5.0'
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -59,28 +87,20 @@ dependencies {
 
     // Tests
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
-    testImplementation "org.robolectric:robolectric:4.5.1"
 
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
-    // Fragment KTX
-    implementation 'androidx.fragment:fragment-ktx:1.5.3'
-
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
-    // Interceptor
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-
-    // Glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    // Moshi
+    implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
+    ksp 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
 
     // Fragment navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
@@ -89,9 +109,6 @@ dependencies {
     // Material
     implementation 'com.google.android.material:material:1.6.1'
 
-    // Preferences
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-
     // Koin
     implementation "io.insert-koin:koin-core:3.2.0"
     implementation "io.insert-koin:koin-android:3.2.0"
@@ -99,5 +116,5 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:2.4.3"
     implementation "androidx.room:room-ktx:2.4.3"
-    kapt "androidx.room:room-compiler:2.4.3"
+    ksp "androidx.room:room-compiler:2.4.3"
 }

@@ -16,8 +16,6 @@ class LightFragment : BaseFragment<LightScreenState, FragmentLightBinding, Light
 
     private val args by navArgs<LightFragmentArgs>()
 
-    private val device by lazy { args.device }
-
     override fun inflateView(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -26,8 +24,8 @@ class LightFragment : BaseFragment<LightScreenState, FragmentLightBinding, Light
     }
 
     override fun initViews() {
-        viewModel.setDevice(device)
-        binding.modeSwitch.setOnCheckedChangeListener { _, isChecked ->
+        viewModel.setDevice(args.device)
+        binding.switchMode.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setMode(isChecked)
         }
         binding.seekbar.doOnProgressChanged {
@@ -37,9 +35,9 @@ class LightFragment : BaseFragment<LightScreenState, FragmentLightBinding, Light
 
     override fun screenStateObserver(): Observer<LightScreenState> = Observer {
         with(binding) {
-            modeSwitch.isChecked = it.light.mode == DeviceMode.ON
+            switchMode.isChecked = it.light.mode == DeviceMode.ON
             seekbar.progress = it.light.intensity
-            seekbarValue.text = it.light.intensity.toString()
+            textSeekbarValue.text = it.light.intensity.toString()
         }
     }
 }

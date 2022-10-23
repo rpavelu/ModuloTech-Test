@@ -12,13 +12,14 @@ data class DevicesListScreenState(
     data class Filter(
         val productType: ProductType,
         val stringRes: Int,
-        val state: Boolean,
+        val isEnabled: Boolean,
     )
 
     enum class State {
         LOADING,
         SUCCESS,
         ERROR,
+        ;
     }
 }
 

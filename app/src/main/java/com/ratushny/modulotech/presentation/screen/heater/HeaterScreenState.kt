@@ -1,6 +1,6 @@
 package com.ratushny.modulotech.presentation.screen.heater
 
-import com.ratushny.modulotech.domain.model.device.Heater
+import com.ratushny.modulotech.domain.model.device.Device.Heater
 
 data class HeaterScreenState(
     val heater: Heater,

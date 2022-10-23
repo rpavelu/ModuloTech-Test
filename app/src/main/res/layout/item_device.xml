@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/device_image"
+        android:id="@+id/image_device"
         android:layout_width="@dimen/device_item_image_size"
         android:layout_height="@dimen/device_item_image_size"
         android:layout_marginStart="@dimen/device_item_margin"
@@ -16,17 +16,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/device_name"
+        android:id="@+id/text_device_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/device_item_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/device_image"
+        app:layout_constraintStart_toEndOf="@id/image_device"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Device name" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/device_value"
+        android:id="@+id/text_device_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/device_item_margin"
