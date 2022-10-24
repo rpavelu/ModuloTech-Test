@@ -1,6 +1,9 @@
 #Android
 local.properties
 
+#Room
+app/schemas/
+
 #Gradle
 .gradle
 /build

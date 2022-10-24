@@ -1,6 +1,5 @@
 package com.ratushny.modulotech.data.repository
 
-import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -12,18 +11,17 @@ import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 
+@Config(manifest = Config.NONE)
 @RunWith(AndroidJUnit4::class)
 class DeviceRepositoryTest {
 
-    private val context = ApplicationProvider.getApplicationContext<Context>()
-
     private val db: Database by lazy {
         Room.inMemoryDatabaseBuilder(
-            context,
+            ApplicationProvider.getApplicationContext(),
             Database::class.java
         ).build()
     }
