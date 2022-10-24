@@ -11,14 +11,15 @@ class RollerShutterViewModel(
     private val deviceInteractor: DeviceInteractor
 ) : BaseViewModel<RollerShutterScreenState>() {
 
-    override val initialState: RollerShutterScreenState
-        get() = RollerShutterScreenState(
+    init {
+        _screenState.value = RollerShutterScreenState(
             RollerShutter(
                 id = 0,
                 deviceName = "",
                 position = 0,
             )
         )
+    }
 
     fun setDevice(device: RollerShutter) {
         _screenState.update {
@@ -45,9 +46,5 @@ class RollerShutterViewModel(
                 deviceInteractor.updateDevice(it.rollerShutter.copy())
             }
         }
-    }
-
-    override fun onAttached() {
-        // Not needed
     }
 }

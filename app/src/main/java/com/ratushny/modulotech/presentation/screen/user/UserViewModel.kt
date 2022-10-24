@@ -17,8 +17,9 @@ class UserViewModel(
     private val userInteractor: UserInteractor
 ) : BaseViewModel<UserScreenState>() {
 
-    override val initialState: UserScreenState
-        get() = UserScreenState()
+    init {
+        _screenState.value = UserScreenState()
+    }
 
     private var user: User? by Delegates.observable(null) { _, _, newUser ->
         newUser ?: return@observable
@@ -146,7 +147,6 @@ class UserViewModel(
     }
 
     companion object {
-
         private const val POSTAL_CODE_MIN_LENGTH = 5
         private const val DATE_FORMAT = "dd/MM/yyyy"
     }

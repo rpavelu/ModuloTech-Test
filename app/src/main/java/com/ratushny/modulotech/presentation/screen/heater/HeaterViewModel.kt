@@ -12,8 +12,8 @@ class HeaterViewModel(
     private val deviceInteractor: DeviceInteractor
 ) : BaseViewModel<HeaterScreenState>() {
 
-    override val initialState: HeaterScreenState
-        get() = HeaterScreenState(
+    init {
+        _screenState.value = HeaterScreenState(
             Heater(
                 id = 0,
                 deviceName = "",
@@ -25,6 +25,7 @@ class HeaterViewModel(
             temperatureStep = TEMPERATURE_STEP,
             currentRawTemp = 0
         )
+    }
 
     fun setDevice(device: Heater) {
         _screenState.update {
@@ -68,10 +69,6 @@ class HeaterViewModel(
 
     private val Heater.rawTemperature: Int
         get() = ((temperature - MIN_TEMPERATURE) / TEMPERATURE_STEP).toInt()
-
-    override fun onAttached() {
-        // Not needed
-    }
 
     companion object {
         private const val MIN_TEMPERATURE = 7

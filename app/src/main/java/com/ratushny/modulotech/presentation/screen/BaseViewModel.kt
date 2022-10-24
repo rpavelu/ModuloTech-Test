@@ -6,16 +6,16 @@ import androidx.lifecycle.ViewModel
 
 abstract class BaseViewModel<State> : ViewModel() {
 
-    protected abstract val initialState: State
-
-    protected val _screenState by lazy { MutableLiveData(initialState) }
+    protected val _screenState by lazy { MutableLiveData<State>() }
     val screenState: LiveData<State>
         get() = _screenState
 
-    fun attach() {
-        onAttached()
+    open fun onAttached() {
+
     }
 
-    protected abstract fun onAttached()
+    open fun onDetached() {
+
+    }
 }
 

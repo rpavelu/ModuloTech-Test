@@ -39,12 +39,13 @@ abstract class BaseFragment<State, VB : ViewBinding, VM : BaseViewModel<State>> 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        viewModel.attach()
+        viewModel.onAttached()
         viewModel.screenState.observe(viewLifecycleOwner, screenStateObserver())
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        viewModel.onDetached()
     }
 }

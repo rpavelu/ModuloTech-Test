@@ -22,8 +22,8 @@ class DevicesListViewModel(
     private val deviceInteractor: DeviceInteractor,
 ) : BaseViewModel<DevicesListScreenState>() {
 
-    override val initialState: DevicesListScreenState
-        get() = DevicesListScreenState(
+    init {
+        _screenState.value = DevicesListScreenState(
             filteredDevices = emptyList(),
             state = DevicesListScreenState.State.LOADING,
             filters = listOf(
@@ -44,6 +44,7 @@ class DevicesListViewModel(
                 ),
             )
         )
+    }
 
     private var devices by Delegates.observable(emptyList<Device>()) { _, _, _ ->
         updateFilteredDevices()

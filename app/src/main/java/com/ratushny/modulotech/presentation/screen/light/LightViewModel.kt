@@ -12,8 +12,8 @@ class LightViewModel(
     private val deviceInteractor: DeviceInteractor
 ) : BaseViewModel<LightScreenState>() {
 
-    override val initialState: LightScreenState
-        get() = LightScreenState(
+    init {
+        _screenState.value = LightScreenState(
             Light(
                 id = 0,
                 deviceName = "",
@@ -21,6 +21,7 @@ class LightViewModel(
                 intensity = 0,
             )
         )
+    }
 
     fun setDevice(device: Light) {
         _screenState.update {
@@ -58,9 +59,5 @@ class LightViewModel(
                 deviceInteractor.updateDevice(it.light.copy())
             }
         }
-    }
-
-    override fun onAttached() {
-        // Not needed
     }
 }
